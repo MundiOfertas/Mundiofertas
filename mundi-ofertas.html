@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundi Ofertas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f8f8; margin: 0; padding: 0; }
+        .section { padding: 40px 20px; background: #fff; margin: 20px auto; max-width: 800px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; margin-bottom: 20px; color: #2c1810; }
+        .form-group { margin-bottom: 1rem; }
+        label { font-weight: bold; display: block; margin-bottom: 0.5rem; }
+        textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+        #enviarPedido { display: inline-block; background: #25d366; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; text-align: center; margin-top: 1rem; }
+        footer { text-align: center; padding: 20px; background: #2c1810; color: white; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<!-- Sección de contacto -->
+<section class="section">
+    <h2>Contacto</h2>
+    <p><strong>Dirección:</strong> Cotopaxi N654 entre Olmedo y Mejía, sector centro histórico</p>
+    <p><strong>Horarios:</strong> Lunes a Sábados de 9:30am a 6:00pm</p>
+    <p><strong>WhatsApp:</strong> <a href="https://wa.me/593983738543" target="_blank">0983738543</a></p>
+    <p>🚚 <strong>Precios al por mayor y menor. Solo entregas en Quito.</strong></p>
+</section>
+
+<!-- Sección de pedido rápido -->
+<section class="section">
+    <h2>Haz tu Pedido Rápido</h2>
+    <p style="text-align: center;">Ingresa los códigos de los productos que deseas y tu pedido se enviará directamente por WhatsApp.</p>
+    <div class="form-group">
+        <label for="codigoPedido">Códigos de los Productos (separados por coma):</label>
+        <textarea id="codigoPedido" rows="4" placeholder="Ej: MO-001, MO-002, MO-005"></textarea>
+    </div>
+    <a id="enviarPedido" target="_blank">Enviar Pedido por WhatsApp</a>
+</section>
+
+<footer>
+    &copy; 2025 Mundi Ofertas - Todos los derechos reservados.
+</footer>
+
+<script>
+    document.getElementById('enviarPedido').addEventListener('click', function (e) {
+        const codigos = document.getElementById('codigoPedido').value.trim();
+        if (codigos === '') {
+            alert('Por favor, ingresa al menos un código de producto.');
+            e.preventDefault();
+            return;
+        }
+        const mensaje = encodeURIComponent(`Hola! Quisiera realizar el siguiente pedido:\n\nCódigos: ${codigos}\n\nGracias!`);
+        this.href = `https://wa.me/593983738543?text=${mensaje}`;
+    });
+</script>
+
+</body>
+</html>
