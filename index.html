@@ -63,6 +63,7 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
@@ -74,6 +75,22 @@
 
         .nav-links a:hover {
             color: #FFD700;
+        }
+
+        .admin-login-btn {
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 24, 16, 0.3);
         }
 
         /* Hero Section */
@@ -112,6 +129,109 @@
             background: #FFC700;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c1810;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #4a2c6a 0%, #2c1810 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 24, 16, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+            width: auto;
+            padding: 8px 16px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
         }
 
         /* Shopping Cart */
@@ -381,6 +501,13 @@
             justify-content: center;
             font-size: 3rem;
             color: #999;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-info {
@@ -441,6 +568,45 @@
             box-shadow: none;
         }
 
+        .admin-controls {
+            margin-top: 10px;
+            display: none;
+            gap: 5px;
+        }
+
+        .admin-controls.show {
+            display: flex;
+        }
+
+        .admin-controls button {
+            flex: 1;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .stock-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .stock-btn.out-of-stock {
+            background: #dc3545;
+        }
+
         /* Admin Panel */
         .admin-panel {
             background: linear-gradient(135deg, #fff8dc 0%, #f0f8ff 100%);
@@ -448,6 +614,11 @@
             padding: 2rem;
             margin: 2rem 0;
             border: 2px dashed #FFD700;
+            display: none;
+        }
+
+        .admin-panel.show {
+            display: block;
         }
 
         .admin-panel h3 {
@@ -461,61 +632,21 @@
             max-width: 500px;
         }
 
-        .form-group {
+        .admin-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .form-group input, .form-group textarea, .form-group select {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        .add-product-btn {
-            background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .add-product-btn:hover {
-            background: linear-gradient(135deg, #4a2c6a 0%, #2c1810 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(44, 24, 16, 0.3);
-        }
-
-        .stock-toggle {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .stock-toggle.out-of-stock {
+        .logout-btn {
             background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
 
         /* How to Order */
@@ -628,6 +759,29 @@
                 width: 90%;
                 right: 5%;
             }
+
+            .modal-content {
+                margin: 5% auto;
+                width: 95%;
+            }
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
         }
     </style>
 </head>
@@ -642,9 +796,78 @@
                 <li><a href="#como-comprar">Cómo Comprar</a></li>
                 <li><a href="#reseñas">Reseñas</a></li>
                 <li><a href="#contacto">Contacto</a></li>
+                <li>
+                    <button class="admin-login-btn" onclick="showAdminLogin()" id="admin-btn">
+                        <i class="fas fa-user-cog"></i> Admin
+                    </button>
+                </li>
             </ul>
         </nav>
     </header>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeAdminLogin()">&times;</span>
+                <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
+            </div>
+            <form onsubmit="adminLogin(event)">
+                <div class="form-group">
+                    <label for="admin-password">Contraseña:</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <button type="submit" class="btn">Iniciar Sesión</button>
+            </form>
+            <div id="login-message"></div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeProductModal()">&times;</span>
+                <h3 id="product-modal-title">Agregar Producto</h3>
+            </div>
+            <form onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label for="product-code">Código del Producto:</label>
+                    <input type="text" id="product-code" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-name">Nombre del Producto:</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Precio al por Menor ($):</label>
+                    <input type="number" id="product-price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price-wholesale">Precio al por Mayor ($):</label>
+                    <input type="number" id="product-price-wholesale" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Descripción:</label>
+                    <textarea id="product-description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">URL de la Imagen (opcional):</label>
+                    <input type="url" id="product-image-url" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="product-stock">Estado del Stock:</label>
+                    <select id="product-stock">
+                        <option value="true">Disponible</option>
+                        <option value="false">Agotado</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" id="save-product-btn">Guardar Producto</button>
+                <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancelar</button>
+            </form>
+            <div id="product-message"></div>
+        </div>
+    </div>
 
     <!-- Cart Toggle Button -->
     <button class="cart-toggle" onclick="toggleCart()">
@@ -673,7 +896,7 @@
     </div>
 
     <!-- WhatsApp Button -->
-    <a href="https://wa.me/593999999999?text=Hola! Me interesa hacer un pedido en Quito" class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/593983738543?text=Hola! Me interesa hacer un pedido en Quito" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -697,88 +920,22 @@
                 <button id="wholesale-btn" onclick="togglePriceType('wholesale')">Precio al por Mayor</button>
             </div>
             
-            <!-- Admin Panel for Adding Products -->
-            <div class="admin-panel">
-                <h3><i class="fas fa-plus-circle"></i> Agregar Nuevo Producto (Panel Administrativo)</h3>
-                <div class="product-form">
-                    <div class="form-group">
-                        <label for="product-code">Código del Producto:</label>
-                        <input type="text" id="product-code" placeholder="Ej: MO-001">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-name">Nombre del Producto:</label>
-                        <input type="text" id="product-name" placeholder="Ej: Licuadora Premium">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-price">Precio al por Menor:</label>
-                        <input type="number" id="product-price" placeholder="25.99" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-price-wholesale">Precio al por Mayor:</label>
-                        <input type="number" id="product-price-wholesale" placeholder="20.99" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="product-description">Descripción:</label>
-                        <textarea id="product-description" placeholder="Describe las características del producto..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-stock">Estado del Stock:</label>
-                        <select id="product-stock">
-                            <option value="in-stock">Disponible</option>
-                            <option value="out-of-stock">Agotado</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-image">Imagen del Producto:</label>
-                        <input type="file" id="product-image" accept="image/*">
-                    </div>
-                    <button class="add-product-btn" onclick="addProduct()">Agregar Producto</button>
+            <!-- Admin Panel -->
+            <div class="admin-panel" id="admin-panel">
+                <div class="admin-header">
+                    <h3><i class="fas fa-cog"></i> Panel de Administración</h3>
+                    <button class="logout-btn" onclick="adminLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
                 </div>
+                <button class="btn" onclick="showAddProductModal()">
+                    <i class="fas fa-plus"></i> Agregar Nuevo Producto
+                </button>
+                <div id="admin-message"></div>
             </div>
 
             <div class="product-grid" id="product-grid">
-                <!-- Productos de ejemplo -->
-                <div class="product-card" data-code="MO-001">
-                    <div class="product-image">
-                        <i class="fas fa-blender"></i>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-code">Código: MO-001</div>
-                        <h3>Licuadora Premium</h3>
-                        <div class="product-price" data-retail="45.99" data-wholesale="39.99">$45.99</div>
-                        <div class="product-description">Licuadora de alta potencia, perfecta para batidos y smoothies. IVA incluido.</div>
-                        <button class="product-button" onclick="addToCart('MO-001', 'Licuadora Premium', 45.99, 39.99)">Agregar al Pedido</button>
-                        <button class="stock-toggle" onclick="toggleStock(this, 'MO-001')">En Stock</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-code="MO-002">
-                    <div class="product-image">
-                        <i class="fas fa-microwave"></i>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-code">Código: MO-002</div>
-                        <h3>Microondas Digital</h3>
-                        <div class="product-price" data-retail="89.99" data-wholesale="79.99">$89.99</div>
-                        <div class="product-description">Microondas con panel digital y múltiples funciones. IVA incluido.</div>
-                        <button class="product-button" onclick="addToCart('MO-002', 'Microondas Digital', 89.99, 79.99)">Agregar al Pedido</button>
-                        <button class="stock-toggle" onclick="toggleStock(this, 'MO-002')">En Stock</button>
-                    </div>
-                </div>
-
-                <div class="product-card out-of-stock" data-code="MO-003">
-                    <div class="product-image">
-                        <i class="fas fa-coffee"></i>
-                    </div>
-                    <div class="product-info">
-                        <div class="product-code">Código: MO-003</div>
-                        <h3>Cafetera Automática</h3>
-                        <div class="product-price" data-retail="125.50" data-wholesale="115.50">$125.50</div>
-                        <div class="product-description">Cafetera automática con temporizador programable. IVA incluido.</div>
-                        <button class="product-button" onclick="addToCart('MO-003', 'Cafetera Automática', 125.50, 115.50)" disabled>Agotado</button>
-                        <button class="stock-toggle out-of-stock" onclick="toggleStock(this, 'MO-003')">Agotado</button>
-                    </div>
-                </div>
+                <!-- Los productos se cargarán aquí dinámicamente -->
             </div>
         </div>
     </section>
@@ -869,9 +1026,9 @@
                     <p style="color: #2c1810; font-weight: bold; margin-top: 1rem;">🚚 Entregamos únicamente en Quito</p>
                     
                     <div style="margin-top: 2rem;">
-                        <a href="https://wa.me/593999999999?text=Hola! Quiero información sobre sus productos en Quito" 
+                        <a href="https://wa.me/593983738543?text=Hola! Quiero información sobre sus productos en Quito" 
                            style="background: #25d366; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin: 10px;">
-                            <i class="fab fa-whatsapp"></i> WhatsApp: +593 99 999 9999
+                            <i class="fab fa-whatsapp"></i> WhatsApp: +593 98 373 8543
                         </a>
                     </div>
                 </div>
@@ -888,45 +1045,321 @@
     </footer>
 
     <script>
-        // Contador para códigos de productos
-        let productCounter = 4;
+        // Variables globales
         let currentPriceType = 'retail';
         let cart = [];
+        let isAdminLoggedIn = false;
+        let editingProductId = null;
+        const ADMIN_PASSWORD = 'admin123'; // Cambia esta contraseña por una segura
 
-        // Función para alternar tipo de precio
-        function togglePriceType(type) {
-            currentPriceType = type;
-            
-            // Actualizar botones
-            document.getElementById('retail-btn').classList.toggle('active', type === 'retail');
-            document.getElementById('wholesale-btn').classList.toggle('active', type === 'wholesale');
-            
-            // Actualizar precios en productos
-            const priceElements = document.querySelectorAll('.product-price');
-            priceElements.forEach(priceEl => {
-                const retailPrice = priceEl.getAttribute('data-retail');
-                const wholesalePrice = priceEl.getAttribute('data-wholesale');
-                
-                if (retailPrice && wholesalePrice) {
-                    const price = type === 'retail' ? retailPrice : wholesalePrice;
-                    priceEl.textContent = `${parseFloat(price).toFixed(2)}`;
+        // Base de datos de productos usando localStorage
+        class ProductDatabase {
+            constructor() {
+                this.storageKey = 'mundiOfertas_products';
+                this.initializeWithSampleData();
+            }
+
+            initializeWithSampleData() {
+                if (!localStorage.getItem(this.storageKey)) {
+                    const sampleProducts = [
+                        {
+                            id: 1,
+                            code: 'MO-001',
+                            name: 'Licuadora Premium',
+                            retailPrice: 45.99,
+                            wholesalePrice: 39.99,
+                            description: 'Licuadora de alta potencia, perfecta para batidos y smoothies.',
+                            imageUrl: '',
+                            inStock: true
+                        },
+                        {
+                            id: 2,
+                            code: 'MO-002',
+                            name: 'Microondas Digital',
+                            retailPrice: 89.99,
+                            wholesalePrice: 79.99,
+                            description: 'Microondas con panel digital y múltiples funciones.',
+                            imageUrl: '',
+                            inStock: true
+                        },
+                        {
+                            id: 3,
+                            code: 'MO-003',
+                            name: 'Cafetera Automática',
+                            retailPrice: 125.50,
+                            wholesalePrice: 115.50,
+                            description: 'Cafetera automática con temporizador programable.',
+                            imageUrl: '',
+                            inStock: false
+                        }
+                    ];
+                    this.saveProducts(sampleProducts);
                 }
+            }
+
+            getProducts() {
+                const products = localStorage.getItem(this.storageKey);
+                return products ? JSON.parse(products) : [];
+            }
+
+            saveProducts(products) {
+                localStorage.setItem(this.storageKey, JSON.stringify(products));
+            }
+
+            addProduct(product) {
+                const products = this.getProducts();
+                const newId = Math.max(...products.map(p => p.id), 0) + 1;
+                product.id = newId;
+                products.push(product);
+                this.saveProducts(products);
+                return product;
+            }
+
+            updateProduct(id, updatedProduct) {
+                const products = this.getProducts();
+                const index = products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    products[index] = { ...updatedProduct, id };
+                    this.saveProducts(products);
+                    return products[index];
+                }
+                return null;
+            }
+
+            deleteProduct(id) {
+                const products = this.getProducts();
+                const filteredProducts = products.filter(p => p.id !== id);
+                this.saveProducts(filteredProducts);
+                return filteredProducts.length !== products.length;
+            }
+
+            getProductById(id) {
+                const products = this.getProducts();
+                return products.find(p => p.id === id);
+            }
+        }
+
+        const productDB = new ProductDatabase();
+
+        // Funciones de autenticación
+        function showAdminLogin() {
+            if (isAdminLoggedIn) {
+                adminLogout();
+            } else {
+                document.getElementById('admin-login-modal').style.display = 'block';
+            }
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('login-message').innerHTML = '';
+        }
+
+        function adminLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('admin-password').value;
+            const messageDiv = document.getElementById('login-message');
+
+            if (password === ADMIN_PASSWORD) {
+                isAdminLoggedIn = true;
+                closeAdminLogin();
+                showAdminControls();
+                messageDiv.innerHTML = '<div class="success-message">Acceso concedido</div>';
+                document.getElementById('admin-btn').innerHTML = '<i class="fas fa-sign-out-alt"></i> Salir';
+            } else {
+                messageDiv.innerHTML = '<div class="error-message">Contraseña incorrecta</div>';
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            hideAdminControls();
+            document.getElementById('admin-btn').innerHTML = '<i class="fas fa-user-cog"></i> Admin';
+        }
+
+        function showAdminControls() {
+            document.getElementById('admin-panel').classList.add('show');
+            document.querySelectorAll('.admin-controls').forEach(control => {
+                control.classList.add('show');
             });
         }
 
-        // Función para alternar carrito
+        function hideAdminControls() {
+            document.getElementById('admin-panel').classList.remove('show');
+            document.querySelectorAll('.admin-controls').forEach(control => {
+                control.classList.remove('show');
+            });
+        }
+
+        // Funciones del modal de productos
+        function showAddProductModal() {
+            editingProductId = null;
+            document.getElementById('product-modal-title').textContent = 'Agregar Producto';
+            document.getElementById('save-product-btn').textContent = 'Guardar Producto';
+            clearProductForm();
+            document.getElementById('product-modal').style.display = 'block';
+        }
+
+        function showEditProductModal(productId) {
+            editingProductId = productId;
+            const product = productDB.getProductById(productId);
+            if (product) {
+                document.getElementById('product-modal-title').textContent = 'Editar Producto';
+                document.getElementById('save-product-btn').textContent = 'Actualizar Producto';
+                fillProductForm(product);
+                document.getElementById('product-modal').style.display = 'block';
+            }
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').style.display = 'none';
+            clearProductForm();
+            editingProductId = null;
+            document.getElementById('product-message').innerHTML = '';
+        }
+
+        function clearProductForm() {
+            document.getElementById('product-code').value = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-price-wholesale').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-image-url').value = '';
+            document.getElementById('product-stock').value = 'true';
+        }
+
+        function fillProductForm(product) {
+            document.getElementById('product-code').value = product.code;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-price').value = product.retailPrice;
+            document.getElementById('product-price-wholesale').value = product.wholesalePrice;
+            document.getElementById('product-description').value = product.description;
+            document.getElementById('product-image-url').value = product.imageUrl || '';
+            document.getElementById('product-stock').value = product.inStock.toString();
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const messageDiv = document.getElementById('product-message');
+
+            const productData = {
+                code: document.getElementById('product-code').value,
+                name: document.getElementById('product-name').value,
+                retailPrice: parseFloat(document.getElementById('product-price').value),
+                wholesalePrice: parseFloat(document.getElementById('product-price-wholesale').value),
+                description: document.getElementById('product-description').value,
+                imageUrl: document.getElementById('product-image-url').value,
+                inStock: document.getElementById('product-stock').value === 'true'
+            };
+
+            try {
+                if (editingProductId) {
+                    productDB.updateProduct(editingProductId, productData);
+                    messageDiv.innerHTML = '<div class="success-message">Producto actualizado exitosamente</div>';
+                } else {
+                    productDB.addProduct(productData);
+                    messageDiv.innerHTML = '<div class="success-message">Producto agregado exitosamente</div>';
+                }
+                
+                setTimeout(() => {
+                    closeProductModal();
+                    loadProducts();
+                }, 1500);
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error-message">Error al guardar el producto</div>';
+            }
+        }
+
+        function deleteProduct(productId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+                productDB.deleteProduct(productId);
+                loadProducts();
+                document.getElementById('admin-message').innerHTML = '<div class="success-message">Producto eliminado exitosamente</div>';
+                setTimeout(() => {
+                    document.getElementById('admin-message').innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        function toggleProductStock(productId) {
+            const product = productDB.getProductById(productId);
+            if (product) {
+                product.inStock = !product.inStock;
+                productDB.updateProduct(productId, product);
+                loadProducts();
+            }
+        }
+
+        // Funciones de productos
+        function loadProducts() {
+            const products = productDB.getProducts();
+            const productGrid = document.getElementById('product-grid');
+            
+            if (products.length === 0) {
+                productGrid.innerHTML = '<div style="text-align: center; grid-column: 1 / -1; padding: 2rem; color: #666;"><i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i><p>No hay productos disponibles</p></div>';
+                return;
+            }
+
+            productGrid.innerHTML = products.map(product => createProductCard(product)).join('');
+        }
+
+        function createProductCard(product) {
+            const currentPrice = currentPriceType === 'retail' ? product.retailPrice : product.wholesalePrice;
+            const isOutOfStock = !product.inStock;
+            const outOfStockClass = isOutOfStock ? 'out-of-stock' : '';
+            const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Pedido';
+            const buttonDisabled = isOutOfStock ? 'disabled' : '';
+
+            let imageContent = '<i class="fas fa-box"></i>';
+            if (product.imageUrl) {
+                imageContent = `<img src="${product.imageUrl}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-box\\"></i>'">`;
+            }
+
+            const adminControls = isAdminLoggedIn ? `
+                <div class="admin-controls show">
+                    <button class="edit-btn" onclick="showEditProductModal(${product.id})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="stock-btn ${isOutOfStock ? 'out-of-stock' : ''}" onclick="toggleProductStock(${product.id})">
+                        ${isOutOfStock ? 'Agotado' : 'En Stock'}
+                    </button>
+                    <button class="delete-btn" onclick="deleteProduct(${product.id})">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </div>
+            ` : '';
+
+            return `
+                <div class="product-card ${outOfStockClass}" data-id="${product.id}">
+                    <div class="product-image">${imageContent}</div>
+                    <div class="product-info">
+                        <div class="product-code">Código: ${product.code}</div>
+                        <h3>${product.name}</h3>
+                        <div class="product-price" data-retail="${product.retailPrice}" data-wholesale="${product.wholesalePrice}">${currentPrice.toFixed(2)}</div>
+                        <div class="product-description">${product.description} IVA incluido.</div>
+                        <button class="product-button" onclick="addToCart(${product.id})" ${buttonDisabled}>${buttonText}</button>
+                        ${adminControls}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Funciones del carrito
         function toggleCart() {
             const cart = document.getElementById('shopping-cart');
             cart.classList.toggle('active');
         }
 
-        // Función para agregar al carrito
-        function addToCart(code, name, retailPrice, wholesalePrice) {
-            const price = currentPriceType === 'retail' ? retailPrice : wholesalePrice;
-            const priceType = currentPriceType === 'retail' ? 'Menor' : 'Mayor';
+        function addToCart(productId) {
+            const product = productDB.getProductById(productId);
+            if (!product || !product.inStock) return;
+
+            const price = currentPriceType === 'retail' ? product.retailPrice : product.wholesalePrice;
+            const priceTypeText = currentPriceType === 'retail' ? 'Menor' : 'Mayor';
             
             // Verificar si el producto ya existe en el carrito
-            const existingItem = cart.find(item => item.code === code && item.priceType === currentPriceType);
+            const existingItem = cart.find(item => item.productId === productId && item.priceType === currentPriceType);
             
             if (existingItem) {
                 alert('Este producto ya está en tu pedido');
@@ -934,21 +1367,21 @@
             }
             
             const item = {
-                code: code,
-                name: name,
+                productId: productId,
+                code: product.code,
+                name: product.name,
                 price: price,
                 priceType: currentPriceType,
-                priceTypeText: priceType
+                priceTypeText: priceTypeText
             };
             
             cart.push(item);
             updateCartDisplay();
             
             // Mostrar notificación
-            alert(`${name} agregado al pedido (${priceType}: ${price.toFixed(2)})`);
+            alert(`${product.name} agregado al pedido (${priceTypeText}: ${price.toFixed(2)})`);
         }
 
-        // Función para actualizar la visualización del carrito
         function updateCartDisplay() {
             const cartContent = document.getElementById('cart-content');
             const cartFooter = document.getElementById('cart-footer');
@@ -983,13 +1416,11 @@
             cartTotal.textContent = `Total: ${total.toFixed(2)}`;
         }
 
-        // Función para remover del carrito
         function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartDisplay();
         }
 
-        // Función para limpiar carrito
         function clearCart() {
             if (confirm('¿Estás seguro de que quieres limpiar todo el pedido?')) {
                 cart = [];
@@ -997,7 +1428,6 @@
             }
         }
 
-        // Función para enviar pedido por WhatsApp
         function sendOrder() {
             if (cart.length === 0) {
                 alert('Tu pedido está vacío');
@@ -1021,102 +1451,21 @@
             message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
             
             const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/593999999999?text=${encodedMessage}`;
+            const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
             
             window.open(whatsappUrl, '_blank');
         }
 
-        // Función para agregar productos (actualizada)
-        function addProduct() {
-            const code = document.getElementById('product-code').value || `MO-${String(productCounter).padStart(3, '0')}`;
-            const name = document.getElementById('product-name').value;
-            const retailPrice = document.getElementById('product-price').value;
-            const wholesalePrice = document.getElementById('product-price-wholesale').value;
-            const description = document.getElementById('product-description').value;
-            const stockStatus = document.getElementById('product-stock').value;
-            const imageInput = document.getElementById('product-image');
+        // Función para alternar tipo de precio
+        function togglePriceType(type) {
+            currentPriceType = type;
             
-            if (!name || !retailPrice || !wholesalePrice || !description) {
-                alert('Por favor, completa todos los campos obligatorios');
-                return;
-            }
-
-            const productGrid = document.getElementById('product-grid');
-            const productCard = document.createElement('div');
-            productCard.className = stockStatus === 'out-of-stock' ? 'product-card out-of-stock' : 'product-card';
-            productCard.setAttribute('data-code', code);
+            // Actualizar botones
+            document.getElementById('retail-btn').classList.toggle('active', type === 'retail');
+            document.getElementById('wholesale-btn').classList.toggle('active', type === 'wholesale');
             
-            let imageContent = '<i class="fas fa-box"></i>';
-            if (imageInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    productCard.querySelector('.product-image').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
-                };
-                reader.readAsDataURL(imageInput.files[0]);
-            }
-            
-            const isOutOfStock = stockStatus === 'out-of-stock';
-            const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Pedido';
-            const buttonDisabled = isOutOfStock ? 'disabled' : '';
-            const stockButtonText = isOutOfStock ? 'Agotado' : 'En Stock';
-            const stockButtonClass = isOutOfStock ? 'stock-toggle out-of-stock' : 'stock-toggle';
-            
-            const currentPrice = currentPriceType === 'retail' ? retailPrice : wholesalePrice;
-            
-            productCard.innerHTML = `
-                <div class="product-image">${imageContent}</div>
-                <div class="product-info">
-                    <div class="product-code">Código: ${code}</div>
-                    <h3>${name}</h3>
-                    <div class="product-price" data-retail="${retailPrice}" data-wholesale="${wholesalePrice}">${parseFloat(currentPrice).toFixed(2)}</div>
-                    <div class="product-description">${description} IVA incluido.</div>
-                    <button class="product-button" onclick="addToCart('${code}', '${name}', ${retailPrice}, ${wholesalePrice})" ${buttonDisabled}>${buttonText}</button>
-                    <button class="${stockButtonClass}" onclick="toggleStock(this, '${code}')">${stockButtonText}</button>
-                </div>
-            `;
-            
-            productGrid.appendChild(productCard);
-            
-            // Limpiar formulario
-            document.getElementById('product-code').value = '';
-            document.getElementById('product-name').value = '';
-            document.getElementById('product-price').value = '';
-            document.getElementById('product-price-wholesale').value = '';
-            document.getElementById('product-description').value = '';
-            document.getElementById('product-stock').value = 'in-stock';
-            document.getElementById('product-image').value = '';
-            
-            productCounter++;
-            alert('Producto agregado exitosamente');
-        }
-
-        // Función para alternar estado de stock
-        function toggleStock(button, productCode) {
-            const productCard = document.querySelector(`[data-code="${productCode}"]`);
-            const productButton = productCard.querySelector('.product-button');
-            
-            if (button.classList.contains('out-of-stock')) {
-                // Cambiar a disponible
-                button.classList.remove('out-of-stock');
-                button.textContent = 'En Stock';
-                productCard.classList.remove('out-of-stock');
-                productButton.disabled = false;
-                productButton.textContent = 'Agregar al Pedido';
-            } else {
-                // Cambiar a agotado
-                button.classList.add('out-of-stock');
-                button.textContent = 'Agotado';
-                productCard.classList.add('out-of-stock');
-                productButton.disabled = true;
-                productButton.textContent = 'Agotado';
-            }
-        }
-
-        // Función legacy para compatibilidad (ya no se usa)
-        function orderProduct(name, price, code) {
-            const message = `Hola! Me interesa el producto:\n*Código:* ${code}\n*Producto:* ${name}\n*Precio:* ${price}\n\nPor favor confirmen disponibilidad.`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/593999999999?text=${encodedMessage}`, '_blank');
+            // Recargar productos para mostrar nuevos precios
+            loadProducts();
         }
 
         // Navegación suave
@@ -1131,6 +1480,24 @@
                     });
                 }
             });
+        });
+
+        // Cerrar modales al hacer clic fuera
+        window.onclick = function(event) {
+            const adminModal = document.getElementById('admin-login-modal');
+            const productModal = document.getElementById('product-modal');
+            
+            if (event.target === adminModal) {
+                closeAdminLogin();
+            }
+            if (event.target === productModal) {
+                closeProductModal();
+            }
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
         });
     </script>
 </body>
