@@ -1,9 +1,4 @@
-.cart-item-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }        .remove-item {
+.remove-item {
             background: #dc3545;
             color: white;
             border: none;
@@ -333,11 +328,26 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .cart-item-price {
             font-size: 0.8rem;
             color: #FFD700;
+            font-weight: bold;
+        }
+
+        .wholesale-info {
+            font-size: 0.7rem;
+            color: #666;
+            margin: 2px 0;
+            font-style: italic;
+        }
+
+        .price-change-info {
+            font-size: 0.7rem;
+            color: #28a745;
+            margin: 2px 0;
             font-weight: bold;
         }
 
@@ -402,29 +412,11 @@
             font-weight: bold;
         }
 
-        .quantity-info {
-            font-size: 0.75rem;
-            color: #666;
-            margin-top: 2px;
-            font-style: italic;
-        }
-
-        .price-change-notice {
-            font-size: 0.7rem;
-            color: #28a745;
-            margin-top: 2px;
-            font-weight: bold;
-        }
-
-        .wholesale-minimum {
-            background: #e8f5e8;
-            color: #155724;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            margin-top: 4px;
-            border-left: 3px solid #28a745;
+        .cart-item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .cart-item-quantity {
@@ -909,6 +901,29 @@
             }
         }
 
+        /* Animations for notifications */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -1098,9 +1113,6 @@
                 </button>
                 <button id="wholesale-btn" onclick="togglePriceType('wholesale')">
                     Precio al por Mayor
-                    <span class="wholesale-info">
-                        Mín. 3 unid. (≥$1) o 6 unid. (<$1)
-                    </span>
                 </button>
             </div>
             
@@ -1704,16 +1716,16 @@
 
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar productos con datos de ejemplo mejorados
+            // Inicializar productos con datos de ejemplo mejorados para testing
             if (!localStorage.getItem('mundiOfertas_products')) {
                 const sampleProducts = [
                     {
                         id: 1,
                         code: 'MO-001',
-                        name: 'Licuadora Premium',
-                        retailPrice: 0.89, // Menos de $1 para probar regla de 6 unidades
-                        wholesalePrice: 0.75,
-                        description: 'Licuadora de alta potencia, perfecta para batidos y smoothies.',
+                        name: 'Lámpara LED',
+                        retailPrice: 0.75, // Menos de $1 para probar regla de 6 unidades
+                        wholesalePrice: 0.60,
+                        description: 'Lámpara LED de alta eficiencia energética.',
                         imageUrl: '',
                         inStock: true
                     },
@@ -1721,8 +1733,8 @@
                         id: 2,
                         code: 'MO-002',
                         name: 'Microondas Digital',
-                        retailPrice: 2.50, // Más de $1 para probar regla de 3 unidades
-                        wholesalePrice: 2.20,
+                        retailPrice: 3.00, // Más de $1 para probar regla de 3 unidades
+                        wholesalePrice: 2.50,
                         description: 'Microondas con panel digital y múltiples funciones.',
                         imageUrl: '',
                         inStock: true
@@ -1730,12 +1742,12 @@
                     {
                         id: 3,
                         code: 'MO-003',
-                        name: 'Cafetera Automática',
+                        name: 'Cafetera Premium',
                         retailPrice: 1.25,
-                        wholesalePrice: 1.10,
+                        wholesalePrice: 1.00,
                         description: 'Cafetera automática con temporizador programable.',
                         imageUrl: '',
-                        inStock: false
+                        inStock: true
                     }
                 ];
                 productDB.saveProducts(sampleProducts);
@@ -1744,8 +1756,11 @@
             loadProducts();
             
             // Debug para verificar funcionamiento
-            console.log('Sistema de precios al por mayor inicializado');
-            console.log('Reglas: <$1 = mín 6 unidades, ≥$1 = mín 3 unidades');
+            console.log('MundiOfertas - Sistema iniciado');
+            console.log('Reglas: <$1.00 = mín 6 unidades, ≥$1.00 = mín 3 unidades');
+            
+            // Verificar que el carrito esté inicializado
+            updateCartDisplay();
         });
     </script>
 </body>
