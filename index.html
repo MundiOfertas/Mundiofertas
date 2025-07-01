@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+.remove-item {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -325,14 +333,53 @@
             font-weight: bold;
         }
 
-        .remove-item {
-            background: #dc3545;
-            color: white;
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 5px 0;
+        }
+
+        .quantity-btn {
+            background: #FFD700;
             border: none;
-            padding: 5px 8px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-weight: bold;
+            color: #2c1810;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 2px;
+            font-size: 0.9rem;
+        }
+
+        .wholesale-badge {
+            background: #28a745;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+
+        .retail-badge {
+            background: #ffc107;
+            color: #000;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
         }
 
         .cart-footer {
@@ -425,11 +472,20 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            position: relative;
         }
 
         .price-toggle button.active {
             background: #FFD700;
             color: #2c1810;
+        }
+
+        .wholesale-info {
+            display: block;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #666;
+            font-weight: normal;
         }
 
         /* WhatsApp Button */
@@ -943,8 +999,15 @@
             
             <!-- Price Type Toggle -->
             <div class="price-toggle">
-                <button id="retail-btn" class="active" onclick="togglePriceType('retail')">Precio al por Menor</button>
-                <button id="wholesale-btn" onclick="togglePriceType('wholesale')">Precio al por Mayor</button>
+                <button id="retail-btn" class="active" onclick="togglePriceType('retail')">
+                    Precio al por Menor
+                </button>
+                <button id="wholesale-btn" onclick="togglePriceType('wholesale')">
+                    Precio al por Mayor
+                    <span class="wholesale-info">
+                        Mín. 3 unid. (≥$1) o 6 unid. (<$1)
+                    </span>
+                </button>
             </div>
             
             <!-- Admin Panel -->
@@ -1167,6 +1230,29 @@
         }
 
         const productDB = new ProductDatabase();
+
+        // Función para obtener cantidad mínima al por mayor
+        function getMinWholesaleQuantity(retailPrice) {
+            return retailPrice < 1 ? 6 : 3;
+        }
+
+        // Función para determinar el precio aplicable según cantidad
+        function getApplicablePrice(product, quantity) {
+            const minWholesale = getMinWholesaleQuantity(product.retailPrice);
+            if (quantity >= minWholesale) {
+                return {
+                    price: product.wholesalePrice,
+                    type: 'wholesale',
+                    typeText: 'Mayor'
+                };
+            } else {
+                return {
+                    price: product.retailPrice,
+                    type: 'retail',
+                    typeText: 'Menor'
+                };
+            }
+        }
 
         // Funciones de autenticación
         function showAdminLogin() {
