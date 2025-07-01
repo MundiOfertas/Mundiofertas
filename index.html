@@ -114,6 +114,181 @@
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
+        /* Shopping Cart */
+        .shopping-cart {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .shopping-cart.active {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-content {
+            padding: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-code {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .cart-item-name {
+            font-size: 0.9rem;
+            margin: 0.2rem 0;
+        }
+
+        .cart-item-price {
+            font-size: 0.8rem;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .remove-item {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .cart-footer {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #2c1810;
+        }
+
+        .cart-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .cart-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .clear-cart {
+            background: #dc3545;
+            color: white;
+        }
+
+        .send-order {
+            background: #25d366;
+            color: white;
+        }
+
+        .cart-toggle {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cart-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Price Type Toggle */
+        .price-toggle {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .price-toggle button {
+            background: #f8f9fa;
+            border: 2px solid #FFD700;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .price-toggle button.active {
+            background: #FFD700;
+            color: #2c1810;
+        }
+
         /* WhatsApp Button */
         .whatsapp-float {
             position: fixed;
@@ -138,146 +313,6 @@
         .whatsapp-float:hover {
             background: #128c7e;
             transform: scale(1.1);
-        }
-
-        /* Order List Panel */
-        .order-panel {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            width: 300px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 999;
-            max-height: 80vh;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .order-panel.active {
-            display: block;
-        }
-
-        .order-panel-header {
-            background: #FFD700;
-            color: #1a1a2e;
-            padding: 15px;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .order-panel-content {
-            padding: 15px;
-        }
-
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-item:last-child {
-            border-bottom: none;
-        }
-
-        .order-item-info {
-            flex: 1;
-        }
-
-        .order-item-name {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .order-item-code {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .order-item-quantity {
-            width: 50px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 0 5px;
-            text-align: center;
-        }
-
-        .order-item-remove {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 8px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .order-total {
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .send-order-btn {
-            width: 100%;
-            background: #25d366;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .send-order-btn:hover {
-            background: #128c7e;
-        }
-
-        .order-toggle {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            background: #FFD700;
-            color: #1a1a2e;
-            border: none;
-            padding: 15px;
-            border-radius: 50px 0 0 50px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 998;
-            transition: all 0.3s ease;
-        }
-
-        .order-toggle:hover {
-            background: #FFC700;
-        }
-
-        .order-counter {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
         }
 
         /* Sections */
@@ -369,22 +404,12 @@
             color: #333;
         }
 
-        .product-prices {
-            margin-bottom: 1rem;
-        }
-
         .product-price {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .price-wholesale {
-            color: #28a745;
-        }
-
-        .price-retail {
             color: #FFD700;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
 
         .product-description {
@@ -392,22 +417,15 @@
             margin-bottom: 1rem;
         }
 
-        .product-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-
         .product-button {
             background: linear-gradient(135deg, #2c1810 0%, #4a2c6a 100%);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
-            font-size: 0.9rem;
+            width: 100%;
         }
 
         .product-button:hover {
@@ -421,15 +439,6 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
-        }
-
-        .add-to-list-btn {
-            background: #FFD700;
-            color: #1a1a2e;
-        }
-
-        .add-to-list-btn:hover {
-            background: #FFC700;
         }
 
         /* Admin Panel */
@@ -474,12 +483,6 @@
             outline: none;
             border-color: #FFD700;
             box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        .price-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
         }
 
         .add-product-btn {
@@ -621,21 +624,9 @@
                 padding: 40px 20px;
             }
 
-            .order-panel {
+            .shopping-cart {
                 width: 90%;
                 right: 5%;
-            }
-
-            .order-toggle {
-                right: 10px;
-            }
-
-            .product-buttons {
-                flex-direction: column;
-            }
-
-            .price-inputs {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -655,36 +646,36 @@
         </nav>
     </header>
 
+    <!-- Cart Toggle Button -->
+    <button class="cart-toggle" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-counter" id="cart-counter">0</span>
+    </button>
+
+    <!-- Shopping Cart -->
+    <div class="shopping-cart" id="shopping-cart">
+        <div class="cart-header">
+            <h4><i class="fas fa-shopping-cart"></i> Mi Pedido</h4>
+            <button onclick="toggleCart()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <p style="text-align: center; color: #666; margin: 2rem 0;">No hay productos en el pedido</p>
+        </div>
+        <div class="cart-footer" id="cart-footer" style="display: none;">
+            <div class="cart-total" id="cart-total">Total: $0.00</div>
+            <div class="cart-buttons">
+                <button class="cart-btn clear-cart" onclick="clearCart()">Limpiar</button>
+                <button class="cart-btn send-order" onclick="sendOrder()">Enviar Pedido</button>
+            </div>
+        </div>
+    </div>
+
     <!-- WhatsApp Button -->
     <a href="https://wa.me/593999999999?text=Hola! Me interesa hacer un pedido en Quito" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
-
-    <!-- Order Panel Toggle -->
-    <button class="order-toggle" onclick="toggleOrderPanel()">
-        <i class="fas fa-shopping-cart"></i> Lista
-        <span class="order-counter" id="order-counter" style="display: none;">0</span>
-    </button>
-
-    <!-- Order Panel -->
-    <div class="order-panel" id="order-panel">
-        <div class="order-panel-header">
-            <h4><i class="fas fa-shopping-cart"></i> Mi Lista de Pedidos</h4>
-            <button onclick="toggleOrderPanel()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
-        </div>
-        <div class="order-panel-content">
-            <div id="order-items"></div>
-            <div class="order-total">
-                <strong>Total de productos: <span id="total-items">0</span></strong>
-            </div>
-            <button class="send-order-btn" onclick="sendOrderToWhatsApp()">
-                <i class="fab fa-whatsapp"></i> Enviar Lista por WhatsApp
-            </button>
-            <button class="send-order-btn" onclick="clearOrderList()" style="background: #dc3545; margin-top: 10px;">
-                <i class="fas fa-trash"></i> Limpiar Lista
-            </button>
-        </div>
-    </div>
 
     <!-- Hero Section -->
     <section id="inicio" class="hero">
@@ -700,6 +691,12 @@
         <div class="container">
             <h2>Nuestros Productos</h2>
             
+            <!-- Price Type Toggle -->
+            <div class="price-toggle">
+                <button id="retail-btn" class="active" onclick="togglePriceType('retail')">Precio al por Menor</button>
+                <button id="wholesale-btn" onclick="togglePriceType('wholesale')">Precio al por Mayor</button>
+            </div>
+            
             <!-- Admin Panel for Adding Products -->
             <div class="admin-panel">
                 <h3><i class="fas fa-plus-circle"></i> Agregar Nuevo Producto (Panel Administrativo)</h3>
@@ -712,15 +709,13 @@
                         <label for="product-name">Nombre del Producto:</label>
                         <input type="text" id="product-name" placeholder="Ej: Licuadora Premium">
                     </div>
-                    <div class="price-inputs">
-                        <div class="form-group">
-                            <label for="product-price-wholesale">Precio al Por Mayor:</label>
-                            <input type="number" id="product-price-wholesale" placeholder="20.99" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="product-price-retail">Precio al Por Menor:</label>
-                            <input type="number" id="product-price-retail" placeholder="25.99" step="0.01">
-                        </div>
+                    <div class="form-group">
+                        <label for="product-price">Precio al por Menor:</label>
+                        <input type="number" id="product-price" placeholder="25.99" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price-wholesale">Precio al por Mayor:</label>
+                        <input type="number" id="product-price-wholesale" placeholder="20.99" step="0.01">
                     </div>
                     <div class="form-group">
                         <label for="product-description">Descripción:</label>
@@ -750,15 +745,9 @@
                     <div class="product-info">
                         <div class="product-code">Código: MO-001</div>
                         <h3>Licuadora Premium</h3>
-                        <div class="product-prices">
-                            <div class="product-price price-wholesale">Por Mayor: $35.99</div>
-                            <div class="product-price price-retail">Por Menor: $45.99</div>
-                        </div>
+                        <div class="product-price" data-retail="45.99" data-wholesale="39.99">$45.99</div>
                         <div class="product-description">Licuadora de alta potencia, perfecta para batidos y smoothies. IVA incluido.</div>
-                        <div class="product-buttons">
-                            <button class="product-button" onclick="orderProduct('Licuadora Premium', 45.99, 'MO-001')">Pedir por WhatsApp</button>
-                            <button class="product-button add-to-list-btn" onclick="addToOrderList('MO-001', 'Licuadora Premium', 35.99, 45.99)">+ Lista</button>
-                        </div>
+                        <button class="product-button" onclick="addToCart('MO-001', 'Licuadora Premium', 45.99, 39.99)">Agregar al Pedido</button>
                         <button class="stock-toggle" onclick="toggleStock(this, 'MO-001')">En Stock</button>
                     </div>
                 </div>
@@ -770,15 +759,9 @@
                     <div class="product-info">
                         <div class="product-code">Código: MO-002</div>
                         <h3>Microondas Digital</h3>
-                        <div class="product-prices">
-                            <div class="product-price price-wholesale">Por Mayor: $75.99</div>
-                            <div class="product-price price-retail">Por Menor: $89.99</div>
-                        </div>
+                        <div class="product-price" data-retail="89.99" data-wholesale="79.99">$89.99</div>
                         <div class="product-description">Microondas con panel digital y múltiples funciones. IVA incluido.</div>
-                        <div class="product-buttons">
-                            <button class="product-button" onclick="orderProduct('Microondas Digital', 89.99, 'MO-002')">Pedir por WhatsApp</button>
-                            <button class="product-button add-to-list-btn" onclick="addToOrderList('MO-002', 'Microondas Digital', 75.99, 89.99)">+ Lista</button>
-                        </div>
+                        <button class="product-button" onclick="addToCart('MO-002', 'Microondas Digital', 89.99, 79.99)">Agregar al Pedido</button>
                         <button class="stock-toggle" onclick="toggleStock(this, 'MO-002')">En Stock</button>
                     </div>
                 </div>
@@ -790,15 +773,9 @@
                     <div class="product-info">
                         <div class="product-code">Código: MO-003</div>
                         <h3>Cafetera Automática</h3>
-                        <div class="product-prices">
-                            <div class="product-price price-wholesale">Por Mayor: $105.50</div>
-                            <div class="product-price price-retail">Por Menor: $125.50</div>
-                        </div>
+                        <div class="product-price" data-retail="125.50" data-wholesale="115.50">$125.50</div>
                         <div class="product-description">Cafetera automática con temporizador programable. IVA incluido.</div>
-                        <div class="product-buttons">
-                            <button class="product-button" onclick="orderProduct('Cafetera Automática', 125.50, 'MO-003')" disabled>Agotado</button>
-                            <button class="product-button add-to-list-btn" onclick="addToOrderList('MO-003', 'Cafetera Automática', 105.50, 125.50)" disabled>+ Lista</button>
-                        </div>
+                        <button class="product-button" onclick="addToCart('MO-003', 'Cafetera Automática', 125.50, 115.50)" disabled>Agotado</button>
                         <button class="stock-toggle out-of-stock" onclick="toggleStock(this, 'MO-003')">Agotado</button>
                     </div>
                 </div>
@@ -816,30 +793,22 @@
                         <i class="fas fa-shopping-cart"></i>
                     </div>
                     <h3>1. Selecciona tus Productos</h3>
-                    <p>Navega por nuestro catálogo y agrega productos a tu lista haciendo clic en "+ Lista" o pide directamente por WhatsApp.</p>
-                </div>
-
-                <div class="step">
-                    <div class="step-icon">
-                        <i class="fas fa-list"></i>
-                    </div>
-                    <h3>2. Crea tu Lista de Pedidos</h3>
-                    <p>Usa nuestro sistema de lista para agregar múltiples productos con códigos y cantidades. Luego envía todo por WhatsApp.</p>
+                    <p>Navega por nuestro catálogo y agrega productos a tu pedido haciendo clic en "Agregar al Pedido".</p>
                 </div>
 
                 <div class="step">
                     <div class="step-icon">
                         <i class="fab fa-whatsapp"></i>
                     </div>
-                    <h3>3. Confirma por WhatsApp</h3>
-                    <p>Te llevará directamente a WhatsApp con tu lista completa. Confirma tu pedido y recibe precios por mayor o menor.</p>
+                    <h3>2. Envía tu Lista por WhatsApp</h3>
+                    <p>Haz clic en "Enviar Pedido" para enviar toda tu lista con códigos automáticamente por WhatsApp.</p>
                 </div>
 
                 <div class="step">
                     <div class="step-icon">
                         <i class="fas fa-credit-card"></i>
                     </div>
-                    <h3>4. Realiza la Transferencia</h3>
+                    <h3>3. Realiza la Transferencia</h3>
                     <p>Te enviamos los datos bancarios. Realiza la transferencia y envíanos el comprobante por WhatsApp.</p>
                 </div>
 
@@ -847,68 +816,322 @@
                     <div class="step-icon">
                         <i class="fas fa-store"></i>
                     </div>
-                    <h3>5. Retira en Nuestro Local</h3>
-                    <p>Una vez confirmado el pago, puedes venir a retirar tu pedido en nuestro local en el centro histórico.</p>
+                    <h3>4. Retira en Nuestro Local</h3>
+                    <p>Una vez confirmado el pago, puedes venir a retirar tu producto en nuestro local.</p>
                 </div>
             </div>
 
-            <div style="background: linear-gradient(135deg, #fff8dc
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mundi Ofertas</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body { font-family: Arial, sans-serif; background: #f8f8f8; margin: 0; padding: 0; }
-        .section { padding: 40px 20px; background: #fff; margin: 20px auto; max-width: 800px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; margin-bottom: 20px; color: #2c1810; }
-        .form-group { margin-bottom: 1rem; }
-        label { font-weight: bold; display: block; margin-bottom: 0.5rem; }
-        textarea { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
-        #enviarPedido { display: inline-block; background: #25d366; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; text-align: center; margin-top: 1rem; }
-        footer { text-align: center; padding: 20px; background: #2c1810; color: white; margin-top: 40px; }
-    </style>
-</head>
-<body>
+            <div style="background: linear-gradient(135deg, #fff8dc 0%, #f0f8ff 100%); padding: 2rem; border-radius: 15px; margin-top: 2rem; text-align: center; border: 2px solid #FFD700;">
+                <h3 style="color: #2c1810; margin-bottom: 1rem;"><i class="fas fa-info-circle"></i> Información de Pago</h3>
+                <p><strong>Método de Pago:</strong> Transferencias Banco Pichincha</p>
+                <p style="margin-top: 1rem; color: #666; font-style: italic;">* Los datos bancarios se proporcionan una vez confirmado el pedido</p>
+                <p style="margin-top: 0.5rem; color: #666; font-style: italic;">* Todos los precios incluyen IVA</p>
+                <p style="margin-top: 0.5rem; color: #2c1810; font-weight: bold;">📍 Servicio disponible únicamente en Quito</p>
+            </div>
+        </div>
+    </section>
 
-<!-- Sección de contacto -->
-<section class="section">
-    <h2>Contacto</h2>
-    <p><strong>Dirección:</strong> Cotopaxi N654 entre Olmedo y Mejía, sector centro histórico</p>
-    <p><strong>Horarios:</strong> Lunes a Sábados de 9:30am a 6:00pm</p>
-    <p><strong>WhatsApp:</strong> <a href="https://wa.me/593983738543" target="_blank">0983738543</a></p>
-    <p>🚚 <strong>Precios al por mayor y menor. Solo entregas en Quito.</strong></p>
-</section>
+    <!-- Reviews Section -->
+    <section id="reseñas" class="section">
+        <div class="container">
+            <h2>Lo que Dicen Nuestros Clientes</h2>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">"Excelente servicio y productos de calidad. La entrega fue rápida y el precio muy competitivo."</div>
+                    <div class="review-author">- María González</div>
+                </div>
 
-<!-- Sección de pedido rápido -->
-<section class="section">
-    <h2>Haz tu Pedido Rápido</h2>
-    <p style="text-align: center;">Ingresa los códigos de los productos que deseas y tu pedido se enviará directamente por WhatsApp.</p>
-    <div class="form-group">
-        <label for="codigoPedido">Códigos de los Productos (separados por coma):</label>
-        <textarea id="codigoPedido" rows="4" placeholder="Ej: MO-001, MO-002, MO-005"></textarea>
-    </div>
-    <a id="enviarPedido" target="_blank">Enviar Pedido por WhatsApp</a>
-</section>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">"Muy confiables, compré una licuadora y llegó en perfectas condiciones. Recomendado al 100%."</div>
+                    <div class="review-author">- Carlos Rodríguez</div>
+                </div>
 
-<footer>
-    &copy; 2025 Mundi Ofertas - Todos los derechos reservados.
-</footer>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">"Atención personalizada por WhatsApp, precios justos y productos originales. Volveré a comprar."</div>
+                    <div class="review-author">- Ana Martínez</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script>
-    document.getElementById('enviarPedido').addEventListener('click', function (e) {
-        const codigos = document.getElementById('codigoPedido').value.trim();
-        if (codigos === '') {
-            alert('Por favor, ingresa al menos un código de producto.');
-            e.preventDefault();
-            return;
+    <!-- Contact Section -->
+    <section id="contacto" class="section">
+        <div class="container">
+            <h2>Contacto</h2>
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #fff8dc 0%, #f0f8ff 100%); padding: 2rem; border-radius: 15px; border: 2px solid #FFD700;">
+                    <h3 style="color: #2c1810; margin-bottom: 1rem;"><i class="fas fa-store"></i> Visítanos en Quito</h3>
+                    <p><strong>Dirección:</strong> Cotopaxi N654 entre Olmedo y Mejía, Sector Centro Histórico, Quito</p>
+                    <p><strong>Horarios:</strong> Lunes a Sábados 9:30 AM - 6:00 PM</p>
+                    <p style="color: #2c1810; font-weight: bold; margin-top: 1rem;">🚚 Entregamos únicamente en Quito</p>
+                    
+                    <div style="margin-top: 2rem;">
+                        <a href="https://wa.me/593999999999?text=Hola! Quiero información sobre sus productos en Quito" 
+                           style="background: #25d366; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; margin: 10px;">
+                            <i class="fab fa-whatsapp"></i> WhatsApp: +593 99 999 9999
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Mundi Ofertas - Importadora Distribuidora. Todos los derechos reservados.</p>
+            <p>🪐 Productos de calidad para tu hogar y negocio en Quito 🪐</p>
+        </div>
+    </footer>
+
+    <script>
+        // Contador para códigos de productos
+        let productCounter = 4;
+        let currentPriceType = 'retail';
+        let cart = [];
+
+        // Función para alternar tipo de precio
+        function togglePriceType(type) {
+            currentPriceType = type;
+            
+            // Actualizar botones
+            document.getElementById('retail-btn').classList.toggle('active', type === 'retail');
+            document.getElementById('wholesale-btn').classList.toggle('active', type === 'wholesale');
+            
+            // Actualizar precios en productos
+            const priceElements = document.querySelectorAll('.product-price');
+            priceElements.forEach(priceEl => {
+                const retailPrice = priceEl.getAttribute('data-retail');
+                const wholesalePrice = priceEl.getAttribute('data-wholesale');
+                
+                if (retailPrice && wholesalePrice) {
+                    const price = type === 'retail' ? retailPrice : wholesalePrice;
+                    priceEl.textContent = `${parseFloat(price).toFixed(2)}`;
+                }
+            });
         }
-        const mensaje = encodeURIComponent(`Hola! Quisiera realizar el siguiente pedido:\n\nCódigos: ${codigos}\n\nGracias!`);
-        this.href = `https://wa.me/593983738543?text=${mensaje}`;
-    });
-</script>
 
+        // Función para alternar carrito
+        function toggleCart() {
+            const cart = document.getElementById('shopping-cart');
+            cart.classList.toggle('active');
+        }
+
+        // Función para agregar al carrito
+        function addToCart(code, name, retailPrice, wholesalePrice) {
+            const price = currentPriceType === 'retail' ? retailPrice : wholesalePrice;
+            const priceType = currentPriceType === 'retail' ? 'Menor' : 'Mayor';
+            
+            // Verificar si el producto ya existe en el carrito
+            const existingItem = cart.find(item => item.code === code && item.priceType === currentPriceType);
+            
+            if (existingItem) {
+                alert('Este producto ya está en tu pedido');
+                return;
+            }
+            
+            const item = {
+                code: code,
+                name: name,
+                price: price,
+                priceType: currentPriceType,
+                priceTypeText: priceType
+            };
+            
+            cart.push(item);
+            updateCartDisplay();
+            
+            // Mostrar notificación
+            alert(`${name} agregado al pedido (${priceType}: ${price.toFixed(2)})`);
+        }
+
+        // Función para actualizar la visualización del carrito
+        function updateCartDisplay() {
+            const cartContent = document.getElementById('cart-content');
+            const cartFooter = document.getElementById('cart-footer');
+            const cartCounter = document.getElementById('cart-counter');
+            const cartTotal = document.getElementById('cart-total');
+            
+            cartCounter.textContent = cart.length;
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = '<p style="text-align: center; color: #666; margin: 2rem 0;">No hay productos en el pedido</p>';
+                cartFooter.style.display = 'none';
+                return;
+            }
+            
+            cartFooter.style.display = 'block';
+            
+            let total = 0;
+            cartContent.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-code">${item.code}</div>
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">${item.price.toFixed(2)} (${item.priceTypeText})</div>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+                    </div>
+                `;
+            }).join('');
+            
+            cartTotal.textContent = `Total: ${total.toFixed(2)}`;
+        }
+
+        // Función para remover del carrito
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        // Función para limpiar carrito
+        function clearCart() {
+            if (confirm('¿Estás seguro de que quieres limpiar todo el pedido?')) {
+                cart = [];
+                updateCartDisplay();
+            }
+        }
+
+        // Función para enviar pedido por WhatsApp
+        function sendOrder() {
+            if (cart.length === 0) {
+                alert('Tu pedido está vacío');
+                return;
+            }
+            
+            let message = '🛒 *NUEVO PEDIDO - MUNDI OFERTAS* 🛒\n\n';
+            message += '📍 *Dirección:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n\n';
+            message += '*PRODUCTOS SOLICITADOS:*\n';
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                message += `${index + 1}. *Código:* ${item.code}\n`;
+                message += `   *Producto:* ${item.name}\n`;
+                message += `   *Precio:* ${item.price.toFixed(2)} (${item.priceTypeText})\n\n`;
+            });
+            
+            message += `💰 *TOTAL: ${total.toFixed(2)}*\n\n`;
+            message += '📋 Por favor confirmen disponibilidad y método de pago.\n';
+            message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/593999999999?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Función para agregar productos (actualizada)
+        function addProduct() {
+            const code = document.getElementById('product-code').value || `MO-${String(productCounter).padStart(3, '0')}`;
+            const name = document.getElementById('product-name').value;
+            const retailPrice = document.getElementById('product-price').value;
+            const wholesalePrice = document.getElementById('product-price-wholesale').value;
+            const description = document.getElementById('product-description').value;
+            const stockStatus = document.getElementById('product-stock').value;
+            const imageInput = document.getElementById('product-image');
+            
+            if (!name || !retailPrice || !wholesalePrice || !description) {
+                alert('Por favor, completa todos los campos obligatorios');
+                return;
+            }
+
+            const productGrid = document.getElementById('product-grid');
+            const productCard = document.createElement('div');
+            productCard.className = stockStatus === 'out-of-stock' ? 'product-card out-of-stock' : 'product-card';
+            productCard.setAttribute('data-code', code);
+            
+            let imageContent = '<i class="fas fa-box"></i>';
+            if (imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    productCard.querySelector('.product-image').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+            
+            const isOutOfStock = stockStatus === 'out-of-stock';
+            const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Pedido';
+            const buttonDisabled = isOutOfStock ? 'disabled' : '';
+            const stockButtonText = isOutOfStock ? 'Agotado' : 'En Stock';
+            const stockButtonClass = isOutOfStock ? 'stock-toggle out-of-stock' : 'stock-toggle';
+            
+            const currentPrice = currentPriceType === 'retail' ? retailPrice : wholesalePrice;
+            
+            productCard.innerHTML = `
+                <div class="product-image">${imageContent}</div>
+                <div class="product-info">
+                    <div class="product-code">Código: ${code}</div>
+                    <h3>${name}</h3>
+                    <div class="product-price" data-retail="${retailPrice}" data-wholesale="${wholesalePrice}">${parseFloat(currentPrice).toFixed(2)}</div>
+                    <div class="product-description">${description} IVA incluido.</div>
+                    <button class="product-button" onclick="addToCart('${code}', '${name}', ${retailPrice}, ${wholesalePrice})" ${buttonDisabled}>${buttonText}</button>
+                    <button class="${stockButtonClass}" onclick="toggleStock(this, '${code}')">${stockButtonText}</button>
+                </div>
+            `;
+            
+            productGrid.appendChild(productCard);
+            
+            // Limpiar formulario
+            document.getElementById('product-code').value = '';
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-price-wholesale').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-stock').value = 'in-stock';
+            document.getElementById('product-image').value = '';
+            
+            productCounter++;
+            alert('Producto agregado exitosamente');
+        }
+
+        // Función para alternar estado de stock
+        function toggleStock(button, productCode) {
+            const productCard = document.querySelector(`[data-code="${productCode}"]`);
+            const productButton = productCard.querySelector('.product-button');
+            
+            if (button.classList.contains('out-of-stock')) {
+                // Cambiar a disponible
+                button.classList.remove('out-of-stock');
+                button.textContent = 'En Stock';
+                productCard.classList.remove('out-of-stock');
+                productButton.disabled = false;
+                productButton.textContent = 'Agregar al Pedido';
+            } else {
+                // Cambiar a agotado
+                button.classList.add('out-of-stock');
+                button.textContent = 'Agotado';
+                productCard.classList.add('out-of-stock');
+                productButton.disabled = true;
+                productButton.textContent = 'Agotado';
+            }
+        }
+
+        // Función legacy para compatibilidad (ya no se usa)
+        function orderProduct(name, price, code) {
+            const message = `Hola! Me interesa el producto:\n*Código:* ${code}\n*Producto:* ${name}\n*Precio:* ${price}\n\nPor favor confirmen disponibilidad.`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/593999999999?text=${encodedMessage}`, '_blank');
+        }
+
+        // Navegación suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
