@@ -1502,45 +1502,22 @@
         }
 
         function deleteProduct(productId) {
-            console.log('=== ELIMINAR PRODUCTO ===');
-            console.log('Product ID a eliminar:', productId);
-            
             if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                const success = productDB.deleteProduct(productId);
-                console.log('Resultado eliminación:', success);
-                
-                if (success) {
-                    loadProducts();
-                    document.getElementById('admin-message').innerHTML = '<div class="success-message">Producto eliminado exitosamente</div>';
-                    setTimeout(() => {
-                        document.getElementById('admin-message').innerHTML = '';
-                    }, 3000);
-                } else {
-                    document.getElementById('admin-message').innerHTML = '<div class="error-message">Error al eliminar el producto</div>';
-                }
+                productDB.deleteProduct(productId);
+                loadProducts();
+                document.getElementById('admin-message').innerHTML = '<div class="success-message">Producto eliminado exitosamente</div>';
+                setTimeout(() => {
+                    document.getElementById('admin-message').innerHTML = '';
+                }, 3000);
             }
         }
 
         function toggleProductStock(productId) {
-            console.log('=== TOGGLE STOCK ===');
-            console.log('Product ID:', productId);
-            
             const product = productDB.getProductById(productId);
-            console.log('Producto encontrado:', product);
-            
             if (product) {
                 product.inStock = !product.inStock;
-                const success = productDB.updateProduct(productId, product);
-                console.log('Stock actualizado:', success);
-                
-                if (success) {
-                    loadProducts();
-                    const status = product.inStock ? 'disponible' : 'agotado';
-                    document.getElementById('admin-message').innerHTML = `<div class="success-message">Producto marcado como ${status}</div>`;
-                    setTimeout(() => {
-                        document.getElementById('admin-message').innerHTML = '';
-                    }, 3000);
-                }
+                productDB.updateProduct(productId, product);
+                loadProducts();
             }
         }
 
