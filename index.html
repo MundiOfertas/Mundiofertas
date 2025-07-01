@@ -296,15 +296,15 @@
 
         .cart-content {
             padding: 1rem;
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
         .cart-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
+            align-items: flex-start;
+            padding: 1rem 0;
             border-bottom: 1px solid #eee;
         }
 
@@ -325,12 +325,83 @@
         .cart-item-name {
             font-size: 0.9rem;
             margin: 0.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .cart-item-price {
             font-size: 0.8rem;
             color: #FFD700;
             font-weight: bold;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .quantity-btn {
+            background: #FFD700;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            color: #2c1810;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #FFC700;
+            transform: scale(1.1);
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .wholesale-badge {
+            background: #28a745;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .retail-badge {
+            background: #ffc107;
+            color: #000;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .cart-item-quantity {
@@ -1610,7 +1681,48 @@
 
         // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar productos con datos de ejemplo mejorados
+            if (!localStorage.getItem('mundiOfertas_products')) {
+                const sampleProducts = [
+                    {
+                        id: 1,
+                        code: 'MO-001',
+                        name: 'Licuadora Premium',
+                        retailPrice: 0.89, // Menos de $1 para probar regla de 6 unidades
+                        wholesalePrice: 0.75,
+                        description: 'Licuadora de alta potencia, perfecta para batidos y smoothies.',
+                        imageUrl: '',
+                        inStock: true
+                    },
+                    {
+                        id: 2,
+                        code: 'MO-002',
+                        name: 'Microondas Digital',
+                        retailPrice: 2.50, // Más de $1 para probar regla de 3 unidades
+                        wholesalePrice: 2.20,
+                        description: 'Microondas con panel digital y múltiples funciones.',
+                        imageUrl: '',
+                        inStock: true
+                    },
+                    {
+                        id: 3,
+                        code: 'MO-003',
+                        name: 'Cafetera Automática',
+                        retailPrice: 1.25,
+                        wholesalePrice: 1.10,
+                        description: 'Cafetera automática con temporizador programable.',
+                        imageUrl: '',
+                        inStock: false
+                    }
+                ];
+                productDB.saveProducts(sampleProducts);
+            }
+            
             loadProducts();
+            
+            // Debug para verificar funcionamiento
+            console.log('Sistema de precios al por mayor inicializado');
+            console.log('Reglas: <$1 = mín 6 unidades, ≥$1 = mín 3 unidades');
         });
     </script>
 </body>
