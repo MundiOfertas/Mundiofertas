@@ -1614,23 +1614,18 @@
             }
         }
 
-        function addToCart(productId) {
-         const product = productDB.getProductById(productId);
+function addToCart(productId) {
+    const product = productDB.getProductById(productId);
     if (!product || !product.inStock) return;
 
-    // Determinar cantidad mínima según precio
     const minQuantity = product.retailPrice < 1 ? 6 : 3;
-    const initialQuantity = minQuantity; // Empezar con la cantidad mínima
+    const initialQuantity = currentPriceType === 'wholesale' ? minQuantity : 1;
 
-    // Verificar si el producto ya existe en el carrito
     const existingItemIndex = cart.findIndex(item => item.productId === productId);
-    
+
     if (existingItemIndex !== -1) {
-        // Si ya existe, solo aumentar la cantidad
         cart[existingItemIndex].quantity += initialQuantity;
-        updateCartItemPrice(existingItemIndex);
     } else {
-        // Calcular precio aplicable según cantidad inicial
         const priceInfo = getApplicablePrice(product, initialQuantity);
         
         const item = {
@@ -1643,18 +1638,14 @@
             price: priceInfo.price,
             priceType: priceInfo.type,
             priceTypeText: priceInfo.typeText,
-            minWholesale: priceInfo.minQuantity
+            minWholesale: minQuantity
         };
-        
         cart.push(item);
     }
-    
+
     updateCartDisplay();
-    
-    // Mostrar notificación
-    const notification = `${product.name} agregado al pedido (${initialQuantity} unidades)`;
-    showNotification(notification);
-}          
+    showNotification(`${product.name} agregado (${initialQuantity} unidad${initialQuantity > 1 ? 'es' : ''})`);
+}
 
         function updateCartDisplay() {
     const cartContent = document.getElementById('cart-content');
