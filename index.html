@@ -1,4 +1,4 @@
-       .remove-item {
+.remove-item {
             background: #dc3545;
             color: white;
             border: none;
@@ -1615,7 +1615,7 @@
         }
 
         function addToCart(productId) {
-const product = productDB.getProductById(productId);
+         const product = productDB.getProductById(productId);
     if (!product || !product.inStock) return;
 
     // Determinar cantidad mínima según precio
@@ -1654,7 +1654,7 @@ const product = productDB.getProductById(productId);
     // Mostrar notificación
     const notification = `${product.name} agregado al pedido (${initialQuantity} unidades)`;
     showNotification(notification);
-}
+}          
 
         function updateCartDisplay() {
     const cartContent = document.getElementById('cart-content');
@@ -1710,6 +1710,7 @@ const product = productDB.getProductById(productId);
     
     cartTotal.textContent = `Total: $${total.toFixed(2)}`;
 }
+
 
         function removeFromCart(index) {
             cart.splice(index, 1);
@@ -1838,7 +1839,8 @@ const product = productDB.getProductById(productId);
             // Verificar que el carrito esté inicializado
             updateCartDisplay();
         });
-        function updateCartItemPrice(index) {
+
+function updateCartItemPrice(index) {
     const item = cart[index];
     const product = productDB.getProductById(item.productId);
     
