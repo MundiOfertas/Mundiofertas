@@ -1728,36 +1728,26 @@
         return;
     }
     
-    // Encabezado del mensaje
-    let message = '🛒 *NUEVO PEDIDO* 🛒\n\n';
+    let message = '*NUEVO PEDIDO*\n';
     message += '*PRODUCTOS SOLICITADOS:*\n\n';
-    message += '--------------------------------\n';
-    message += '*Código* | *Producto* | *Cantidad*\n';
-    message += '--------------------------------\n';
     
-    // Detalles de cada producto
     let total = 0;
     cart.forEach((item) => {
         const subtotal = item.price * item.quantity;
         total += subtotal;
         
-        message += `${item.code} | ${item.name} | ${item.quantity}\n`;
+        message += `Código: ${item.code}\n`;
+        message += `Cantidad: ${item.quantity}\n`;
+        message += `Producto: ${item.name}\n`;
+        message += `-----\n`; // Separador entre productos
     });
     
-    // Total y información adicional
-    message += '\n--------------------------------\n';
-    message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
-    message += '📍 *Dirección de entrega:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n';
-    message += '📞 *Contacto:* +593 98 373 8543\n';
-    message += '🕐 *Horario de atención:* Lunes a Sábado 9:30 AM - 6:00 PM';
+    message += `*TOTAL A PAGAR: $${total.toFixed(2)}*`;
     
-    // Codificar el mensaje para WhatsApp
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
-    
-    // Abrir en nueva pestaña
-    window.open(whatsappUrl, '_blank');
+    window.open(`https://wa.me/593983738543?text=${encodedMessage}`, '_blank');
 }
+
 
         // Función para alternar tipo de precio
         function togglePriceType(type) {
