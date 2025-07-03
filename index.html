@@ -1356,12 +1356,11 @@
         function getApplicablePrice(product, quantity) {
             const minWholesale = product.retailPrice < 1 ? 6 : 3;
     const isWholesale = quantity >= minWholesale;
-
+    
     return {
         price: isWholesale ? product.wholesalePrice : product.retailPrice,
         type: isWholesale ? 'wholesale' : 'retail',
-        typeText: isWholesale ? 'Mayor' : 'Menor',
-        minQuantity: minWholesale
+        typeText: isWholesale ? 'Mayor' : 'Menor'
     };
 }
 
@@ -1608,23 +1607,28 @@
             }
         }
             function updateQuantity(index, newQuantity) {
-    newQuantity = parseInt(newQuantity);
-    if (isNaN(newQuantity) || newQuantity < 1) return;
-
-    const item = cart[index];
-    item.quantity = newQuantity;
-    
-    // Actualizar precio según cantidad actual
-    const product = productDB.getProductById(item.productId);
-    if (product) {
-        const priceInfo = getApplicablePrice(product, newQuantity);
-        item.price = priceInfo.price;
-        item.priceType = priceInfo.type;
-        item.priceTypeText = priceInfo.typeText;
+                newQuantity = parseInt(newQuantity);
+    if (isNaN(newQuantity) {
+        newQuantity = 1; // Valor por defecto si no es número
+    } else if (newQuantity < 1) {
+        newQuantity = 1; // Mínimo 1 unidad
     }
 
-    updateCartDisplay();
-}    
+    // Actualizar cantidad en el carrito
+    cart[index].quantity = newQuantity;
+
+    // Recalcular precio (mayorista/menorista)
+    const product = productDB.getProductById(cart[index].productId);
+    if (product) {
+        const priceInfo = getApplicablePrice(product, newQuantity);
+        cart[index].price = priceInfo.price;
+        cart[index].priceType = priceInfo.type;
+        cart[index].priceTypeText = priceInfo.typeText;
+    }
+
+    updateCartDisplay(); // Refrescar la vista
+}        
+  
 
         function addToCart(productId) {
     const product = productDB.getProductById(productId);
@@ -1684,30 +1688,21 @@
         
         return `
             <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-code">${item.code}</div>
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">
-                        $${item.price.toFixed(2)} c/u (${item.priceTypeText})
-                        ${item.priceType === 'wholesale' ? 
-                          '<span class="wholesale-badge">MAYOR</span>' : 
-                          '<span class="retail-badge">MENOR</span>'}
-                    </div>
-                    <div class="wholesale-info">
-                        ${item.priceType === 'retail' && item.minWholesale ? 
-                          `*Compra ${item.minWholesale} unidades para precio al por mayor` : ''}
-                    </div>
-                </div>
-                <div class="cart-item-quantity">
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
-                    <input type="number" class="quantity-input" value="${item.quantity}" 
-                           min="1" onchange="updateQuantity(${index}, this.value)">
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
-                </div>
-                <div class="cart-item-actions">
-                    <button class="remove-item" onclick="removeFromCart(${index})">×</button>
-                </div>
-            </div>
+    <div class="cart-item-info">
+        <div class="cart-item-code">${item.code}</div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">
+            $${item.price.toFixed(2)} c/u (${item.priceTypeText})
+        </div>
+    </div>
+    <div class="cart-item-quantity">
+        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
+        <input type="number" class="quantity-input" value="${item.quantity}" 
+               min="1" oninput="updateQuantity(${index}, parseInt(this.value) || 1)">
+        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
+    </div>
+    <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+</div>
         `;
     }).join('');
     
