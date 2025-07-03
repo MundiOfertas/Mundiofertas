@@ -1723,32 +1723,41 @@
         }
 
         function sendOrder() {
-            if (cart.length === 0) {
-                alert('Tu pedido está vacío');
-                return;
-            }
-            
-            let message = '🛒 *NUEVO PEDIDO - MUNDIOFERTAS* 🛒\n\n';
-            message += '📍 *Dirección:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n\n';
-            message += '*PRODUCTOS SOLICITADOS:*\n';
-            
-            let total = 0;
-            cart.forEach((item, index) => {
-                total += item.price;
-                message += `${index + 1}. *Código:* ${item.code}\n`;
-                message += `   *Producto:* ${item.name}\n`;
-                message += `   *Precio:* ${item.price.toFixed(2)} (${item.priceTypeText})\n\n`;
-            });
-            
-            message += `💰 *TOTAL: ${total.toFixed(2)}*\n\n`;
-            message += '📋 Por favor confirmen disponibilidad y método de pago.\n';
-            message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
-            
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
-            
-            window.open(whatsappUrl, '_blank');
-        }
+             if (cart.length === 0) {
+        alert('Tu pedido está vacío');
+        return;
+    }
+    
+    // Encabezado del mensaje
+    let message = '🛒 *NUEVO PEDIDO* 🛒\n\n';
+    message += '*PRODUCTOS SOLICITADOS:*\n\n';
+    message += '--------------------------------\n';
+    message += '*Código* | *Producto* | *Cantidad*\n';
+    message += '--------------------------------\n';
+    
+    // Detalles de cada producto
+    let total = 0;
+    cart.forEach((item) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        
+        message += `${item.code} | ${item.name} | ${item.quantity}\n`;
+    });
+    
+    // Total y información adicional
+    message += '\n--------------------------------\n';
+    message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
+    message += '📍 *Dirección de entrega:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n';
+    message += '📞 *Contacto:* +593 98 373 8543\n';
+    message += '🕐 *Horario de atención:* Lunes a Sábado 9:30 AM - 6:00 PM';
+    
+    // Codificar el mensaje para WhatsApp
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
+    
+    // Abrir en nueva pestaña
+    window.open(whatsappUrl, '_blank');
+}
 
         // Función para alternar tipo de precio
         function togglePriceType(type) {
