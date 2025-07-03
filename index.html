@@ -1353,23 +1353,17 @@
             return retailPrice < 1 ? 6 : 3;
         }
 
-        // Función para determinar el precio aplicable según cantidad
         function getApplicablePrice(product, quantity) {
-            const minWholesale = getMinWholesaleQuantity(product.retailPrice);
-            if (quantity >= minWholesale) {
-                return {
-                    price: product.wholesalePrice,
-                    type: 'wholesale',
-                    typeText: 'Mayor'
-                };
-            } else {
-                return {
-                    price: product.retailPrice,
-                    type: 'retail',
-                    typeText: 'Menor'
-                };
-            }
-        }
+            const minWholesale = product.retailPrice < 1 ? 6 : 3;
+    const isWholesale = quantity >= minWholesale;
+
+    return {
+        price: isWholesale ? product.wholesalePrice : product.retailPrice,
+        type: isWholesale ? 'wholesale' : 'retail',
+        typeText: isWholesale ? 'Mayor' : 'Menor',
+        minQuantity: minWholesale
+    };
+}
 
         // Funciones de autenticación
         function showAdminLogin() {
@@ -1613,6 +1607,24 @@
                 console.log('Carrito abierto, contenido actual:', cart);
             }
         }
+            function updateQuantity(index, newQuantity) {
+    newQuantity = parseInt(newQuantity);
+    if (isNaN(newQuantity) || newQuantity < 1) return;
+
+    const item = cart[index];
+    item.quantity = newQuantity;
+    
+    // Actualizar precio según cantidad actual
+    const product = productDB.getProductById(item.productId);
+    if (product) {
+        const priceInfo = getApplicablePrice(product, newQuantity);
+        item.price = priceInfo.price;
+        item.priceType = priceInfo.type;
+        item.priceTypeText = priceInfo.typeText;
+    }
+
+    updateCartDisplay();
+}    
 
 function addToCart(productId) {
     const product = productDB.getProductById(productId);
