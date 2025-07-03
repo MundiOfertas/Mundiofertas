@@ -1626,7 +1626,7 @@
     updateCartDisplay();
 }    
 
-function addToCart(productId) {
+        function addToCart(productId) {
     const product = productDB.getProductById(productId);
     if (!product || !product.inStock) return;
 
