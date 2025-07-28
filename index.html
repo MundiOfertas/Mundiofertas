@@ -1496,24 +1496,47 @@
         }
 
         function deleteProduct(productId) {
-            console.log('=== ELIMINAR PRODUCTO ===');
-            console.log('Product ID a eliminar:', productId);
+    console.log('Intento de eliminar producto ID:', productId);
+    console.log('¿Admin logueado?:', isAdminLoggedIn);
+    
+    if (!isAdminLoggedIn) {
+        alert('Debes iniciar sesión como administrador para realizar esta acción');
+        showAdminLogin();
+        return;
+    }
+    
+    const product = productDB.getProductById(productId);
+    if (!product) {
+        console.error('Producto no encontrado');
+        return;
+    }
+    
+    if (confirm(`¿Estás seguro de eliminar permanentemente "${product.name}" (${product.code})?`)) {
+        try {
+            const success = productDB.deleteProduct(productId);
             
-            if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                const success = productDB.deleteProduct(productId);
-                console.log('Resultado eliminación:', success);
+            if (success) {
+                console.log('Producto eliminado con éxito');
+                document.getElementById('admin-message').innerHTML = 
+                    '<div class="success-message">Producto eliminado exitosamente</div>';
                 
-                if (success) {
-                    loadProducts();
-                    document.getElementById('admin-message').innerHTML = '<div class="success-message">Producto eliminado exitosamente</div>';
-                    setTimeout(() => {
-                        document.getElementById('admin-message').innerHTML = '';
-                    }, 3000);
-                } else {
-                    document.getElementById('admin-message').innerHTML = '<div class="error-message">Error al eliminar el producto</div>';
-                }
+                loadProducts();
+                
+                setTimeout(() => {
+                    document.getElementById('admin-message').innerHTML = '';
+                }, 3000);
+            } else {
+                console.error('Error al eliminar producto');
+                document.getElementById('admin-message').innerHTML = 
+                    '<div class="error-message">No se pudo eliminar el producto</div>';
             }
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            document.getElementById('admin-message').innerHTML = 
+                '<div class="error-message">Ocurrió un error al eliminar</div>';
         }
+    }
+}
 
         function toggleProductStock(productId) {
             console.log('=== TOGGLE STOCK ===');
