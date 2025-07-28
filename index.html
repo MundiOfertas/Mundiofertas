@@ -1356,11 +1356,12 @@
         function getApplicablePrice(product, quantity) {
             const minWholesale = product.retailPrice < 1 ? 6 : 3;
     const isWholesale = quantity >= minWholesale;
-    
+
     return {
         price: isWholesale ? product.wholesalePrice : product.retailPrice,
         type: isWholesale ? 'wholesale' : 'retail',
-        typeText: isWholesale ? 'Mayor' : 'Menor'
+        typeText: isWholesale ? 'Mayor' : 'Menor',
+        minQuantity: minWholesale
     };
 }
 
@@ -1608,27 +1609,24 @@
         }
             function updateQuantity(index, newQuantity) {
     newQuantity = parseInt(newQuantity);
-    if (isNaN(newQuantity)) {  // Corregido
-        newQuantity = 1;
-    } else if (newQuantity < 1) {
-        newQuantity = 1;
-    }
+    if (isNaN(newQuantity) || newQuantity < 1) return;
 
-    // Actualizar cantidad
-    cart[index].quantity = newQuantity;
-
-    // Recalcular precio (importante)
-    const product = productDB.getProductById(cart[index].productId);
+    const item = cart[index];
+    item.quantity = newQuantity;
+    
+    // Actualizar precio según cantidad actual
+    const product = productDB.getProductById(item.productId);
     if (product) {
         const priceInfo = getApplicablePrice(product, newQuantity);
-        cart[index].price = priceInfo.price;
+        item.price = priceInfo.price;
+        item.priceType = priceInfo.type;
+        item.priceTypeText = priceInfo.typeText;
     }
 
-    updateCartDisplay();  // Refrescar el carrito
-}
-  
+    updateCartDisplay();
+}    
 
-        function addToCart(productId) {
+function addToCart(productId) {
     const product = productDB.getProductById(productId);
     if (!product || !product.inStock) return;
 
@@ -1686,21 +1684,30 @@
         
         return `
             <div class="cart-item">
-    <div class="cart-item-info">
-        <div class="cart-item-code">${item.code}</div>
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">
-            $${item.price.toFixed(2)} c/u (${item.priceTypeText})
-        </div>
-    </div>
-    <div class="cart-item-quantity">
-        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
-        <input type="number" class="quantity-input" value="${item.quantity}" 
-               min="1" oninput="updateQuantity(${index}, parseInt(this.value) || 1)">
-        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
-    </div>
-    <button class="remove-item" onclick="removeFromCart(${index})">×</button>
-</div>
+                <div class="cart-item-info">
+                    <div class="cart-item-code">${item.code}</div>
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">
+                        $${item.price.toFixed(2)} c/u (${item.priceTypeText})
+                        ${item.priceType === 'wholesale' ? 
+                          '<span class="wholesale-badge">MAYOR</span>' : 
+                          '<span class="retail-badge">MENOR</span>'}
+                    </div>
+                    <div class="wholesale-info">
+                        ${item.priceType === 'retail' && item.minWholesale ? 
+                          `*Compra ${item.minWholesale} unidades para precio al por mayor` : ''}
+                    </div>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
+                    <input type="number" class="quantity-input" value="${item.quantity}" 
+                           min="1" onchange="updateQuantity(${index}, this.value)">
+                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
+                </div>
+                <div class="cart-item-actions">
+                    <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+                </div>
+            </div>
         `;
     }).join('');
     
@@ -1721,41 +1728,32 @@
         }
 
         function sendOrder() {
-             if (cart.length === 0) {
-        alert('Tu pedido está vacío');
-        return;
-    }
-    
-    // Encabezado del mensaje
-    let message = '🛒 *NUEVO PEDIDO* 🛒\n\n';
-    message += '*PRODUCTOS SOLICITADOS:*\n\n';
-    message += '--------------------------------\n';
-    message += '*Código* | *Producto* | *Cantidad*\n';
-    message += '--------------------------------\n';
-    
-    // Detalles de cada producto
-    let total = 0;
-    cart.forEach((item) => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        
-        message += `${item.code} | ${item.name} | ${item.quantity}\n`;
-    });
-    
-    // Total y información adicional
-    message += '\n--------------------------------\n';
-    message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
-    message += '📍 *Dirección de entrega:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n';
-    message += '📞 *Contacto:* +593 98 373 8543\n';
-    message += '🕐 *Horario de atención:* Lunes a Sábado 9:30 AM - 6:00 PM';
-    
-    // Codificar el mensaje para WhatsApp
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
-    
-    // Abrir en nueva pestaña
-    window.open(whatsappUrl, '_blank');
-}
+            if (cart.length === 0) {
+                alert('Tu pedido está vacío');
+                return;
+            }
+            
+            let message = '🛒 *NUEVO PEDIDO - MUNDIOFERTAS* 🛒\n\n';
+            message += '📍 *Dirección:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n\n';
+            message += '*PRODUCTOS SOLICITADOS:*\n';
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                message += `${index + 1}. *Código:* ${item.code}\n`;
+                message += `   *Producto:* ${item.name}\n`;
+                message += `   *Precio:* ${item.price.toFixed(2)} (${item.priceTypeText})\n\n`;
+            });
+            
+            message += `💰 *TOTAL: ${total.toFixed(2)}*\n\n`;
+            message += '📋 Por favor confirmen disponibilidad y método de pago.\n';
+            message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
 
         // Función para alternar tipo de precio
         function togglePriceType(type) {
@@ -1836,12 +1834,6 @@
             }
             
             loadProducts();
-
-                    document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();  // Cargar productos al iniciar
-    updateCartDisplay();  // Mostrar carrito vacío al inicio
-    console.log("Página cargada correctamente!");  // Mensaje de depuración
-});
             
             // Debug para verificar funcionamiento
             console.log('MundiOfertas - Sistema iniciado');
