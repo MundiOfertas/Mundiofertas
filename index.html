@@ -1496,44 +1496,29 @@
         }
 
         function deleteProduct(productId) {
-    console.log('Intento de eliminar producto ID:', productId);
-    console.log('¿Admin logueado?:', isAdminLoggedIn);
-    
     if (!isAdminLoggedIn) {
-        alert('Debes iniciar sesión como administrador para realizar esta acción');
-        showAdminLogin();
+        alert('Debes iniciar sesión como administrador para eliminar productos');
         return;
     }
     
-    const product = productDB.getProductById(productId);
-    if (!product) {
-        console.error('Producto no encontrado');
-        return;
-    }
-    
-    if (confirm(`¿Estás seguro de eliminar permanentemente "${product.name}" (${product.code})?`)) {
-        try {
-            const success = productDB.deleteProduct(productId);
-            
-            if (success) {
-                console.log('Producto eliminado con éxito');
-                document.getElementById('admin-message').innerHTML = 
-                    '<div class="success-message">Producto eliminado exitosamente</div>';
-                
-                loadProducts();
-                
-                setTimeout(() => {
-                    document.getElementById('admin-message').innerHTML = '';
-                }, 3000);
-            } else {
-                console.error('Error al eliminar producto');
-                document.getElementById('admin-message').innerHTML = 
-                    '<div class="error-message">No se pudo eliminar el producto</div>';
-            }
-        } catch (error) {
-            console.error('Error al eliminar:', error);
+    if (confirm('¿Estás seguro de que quieres eliminar este producto permanentemente?')) {
+        const success = productDB.deleteProduct(productId);
+        
+        if (success) {
+            // Mostrar mensaje de éxito
             document.getElementById('admin-message').innerHTML = 
-                '<div class="error-message">Ocurrió un error al eliminar</div>';
+                '<div class="success-message">Producto eliminado exitosamente</div>';
+            
+            // Recargar la lista de productos
+            loadProducts();
+            
+            // Ocultar el mensaje después de 3 segundos
+            setTimeout(() => {
+                document.getElementById('admin-message').innerHTML = '';
+            }, 3000);
+        } else {
+            document.getElementById('admin-message').innerHTML = 
+                '<div class="error-message">Error al eliminar el producto</div>';
         }
     }
 }
@@ -1591,18 +1576,19 @@
             }
 
             const adminControls = isAdminLoggedIn ? `
-                <div class="admin-controls show">
-                    <button class="edit-btn" onclick="showEditProductModal(${product.id})">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="stock-btn ${isOutOfStock ? 'out-of-stock' : ''}" onclick="toggleProductStock(${product.id})">
-                        ${isOutOfStock ? 'Agotado' : 'En Stock'}
-                    </button>
-                    <button class="delete-btn" onclick="deleteProduct(${product.id})">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </button>
-                </div>
-            ` : '';
+        <div class="admin-controls show">
+            <button class="edit-btn" onclick="showEditProductModal(${product.id})">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="stock-btn ${isOutOfStock ? 'out-of-stock' : ''}" 
+                    onclick="toggleProductStock(${product.id})">
+                ${isOutOfStock ? 'Agotado' : 'En Stock'}
+            </button>
+            <button class="delete-btn" onclick="deleteProduct(${product.id})">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
+        </div>
+    ` : '';
 
             return `
                 <div class="product-card ${outOfStockClass}" data-id="${product.id}">
