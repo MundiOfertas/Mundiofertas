@@ -1250,582 +1250,55 @@
             <p>🪐 Productos de calidad para tu hogar y negocio 🪐</p>
         </div>
     </footer>
+<script>
+    // Variables globales
+    let currentPriceType = 'retail';
+    let cart = [];
+    let isAdminLoggedIn = false;
+    let editingProductId = null;
+    let currentCategory = 'all'; // Nueva variable para la categoría actual
+    const ADMIN_PASSWORD = 'admin123'; // Cambia esta contraseña por una segura
 
-    <script>
-        // Variables globales
-        let currentPriceType = 'retail';
-        let cart = [];
-        let isAdminLoggedIn = false;
-        let editingProductId = null;
-        const ADMIN_PASSWORD = 'admin123'; // Cambia esta contraseña por una segura
-
-        // Base de datos de productos usando localStorage
-        class ProductDatabase {
-            constructor() {
-                this.storageKey = 'mundiOfertas_products';
-                this.initializeWithSampleData();
-            }
-
-            initializeWithSampleData() {
-                if (!localStorage.getItem(this.storageKey)) {
-                    const sampleProducts = [
-                        {
-                            id: 1,
-                            code: 'MO-001',
-                            name: 'Licuadora Premium',
-                            retailPrice: 45.99,
-                            wholesalePrice: 39.99,
-                            description: 'Licuadora de alta potencia, perfecta para batidos y smoothies.',
-                            imageUrl: '',
-                            inStock: true
-                        },
-                        {
-                            id: 2,
-                            code: 'MO-002',
-                            name: 'Microondas Digital',
-                            retailPrice: 89.99,
-                            wholesalePrice: 79.99,
-                            description: 'Microondas con panel digital y múltiples funciones.',
-                            imageUrl: '',
-                            inStock: true
-                        },
-                        {
-                            id: 3,
-                            code: 'MO-003',
-                            name: 'Cafetera Automática',
-                            retailPrice: 125.50,
-                            wholesalePrice: 115.50,
-                            description: 'Cafetera automática con temporizador programable.',
-                            imageUrl: '',
-                            inStock: false
-                        }
-                    ];
-                    this.saveProducts(sampleProducts);
-                }
-            }
-
-            getProducts() {
-                const products = localStorage.getItem(this.storageKey);
-                return products ? JSON.parse(products) : [];
-            }
-
-            saveProducts(products) {
-                localStorage.setItem(this.storageKey, JSON.stringify(products));
-            }
-
-            addProduct(product) {
-                const products = this.getProducts();
-                const newId = Math.max(...products.map(p => p.id), 0) + 1;
-                product.id = newId;
-                products.push(product);
-                this.saveProducts(products);
-                return product;
-            }
-
-            updateProduct(id, updatedProduct) {
-                const products = this.getProducts();
-                const index = products.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    products[index] = { ...updatedProduct, id };
-                    this.saveProducts(products);
-                    return products[index];
-                }
-                return null;
-            }
-
-            deleteProduct(id) {
-                const products = this.getProducts();
-                const filteredProducts = products.filter(p => p.id !== id);
-                this.saveProducts(filteredProducts);
-                return filteredProducts.length !== products.length;
-            }
-
-            getProductById(id) {
-                const products = this.getProducts();
-                return products.find(p => p.id === id);
-            }
+    // Base de datos de productos y categorías usando localStorage
+    class AppDatabase {
+        constructor() {
+            this.productsKey = 'mundiOfertas_products';
+            this.categoriesKey = 'mundiOfertas_categories';
+            this.initializeWithSampleData();
         }
 
-        const productDB = new ProductDatabase();
+        initializeWithSampleData() {
+            if (!localStorage.getItem(this.productsKey)) {
+                const sampleCategories = [
+                    { id: 1, name: 'Electrónica' },
+                    { id: 2, name: 'Hogar' },
+                    { id: 3, name: 'Juguetes' },
+                    { id: 4, name: 'Otros' }
+                ];
+                this.saveCategories(sampleCategories);
 
-        // Función para obtener cantidad mínima al por mayor
-        function getMinWholesaleQuantity(retailPrice) {
-            return retailPrice < 1 ? 6 : 3;
-        }
-
-        function getApplicablePrice(product, quantity) {
-            const minWholesale = product.retailPrice < 1 ? 6 : 3;
-    const isWholesale = quantity >= minWholesale;
-
-    return {
-        price: isWholesale ? product.wholesalePrice : product.retailPrice,
-        type: isWholesale ? 'wholesale' : 'retail',
-        typeText: isWholesale ? 'Mayor' : 'Menor',
-        minQuantity: minWholesale
-    };
-}
-
-        // Funciones de autenticación
-        function showAdminLogin() {
-            if (isAdminLoggedIn) {
-                adminLogout();
-            } else {
-                document.getElementById('admin-login-modal').style.display = 'block';
-            }
-        }
-
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').style.display = 'none';
-            document.getElementById('admin-password').value = '';
-            document.getElementById('login-message').innerHTML = '';
-        }
-
-        function adminLogin(event) {
-            event.preventDefault();
-            const password = document.getElementById('admin-password').value;
-            const messageDiv = document.getElementById('login-message');
-
-            if (password === ADMIN_PASSWORD) {
-                isAdminLoggedIn = true;
-                closeAdminLogin();
-                showAdminControls();
-                messageDiv.innerHTML = '<div class="success-message">Acceso concedido</div>';
-                document.getElementById('admin-btn').innerHTML = '<i class="fas fa-sign-out-alt"></i> Salir';
-            } else {
-                messageDiv.innerHTML = '<div class="error-message">Contraseña incorrecta</div>';
-            }
-        }
-
-        function adminLogout() {
-            isAdminLoggedIn = false;
-            hideAdminControls();
-            document.getElementById('admin-btn').innerHTML = '<i class="fas fa-user-cog"></i> Admin';
-        }
-
-        function showAdminControls() {
-            document.getElementById('admin-panel').classList.add('show');
-            document.querySelectorAll('.admin-controls').forEach(control => {
-                control.classList.add('show');
-            });
-        }
-
-        function hideAdminControls() {
-            document.getElementById('admin-panel').classList.remove('show');
-            document.querySelectorAll('.admin-controls').forEach(control => {
-                control.classList.remove('show');
-            });
-        }
-
-        // Funciones del modal de productos
-        function showAddProductModal() {
-            editingProductId = null;
-            document.getElementById('product-modal-title').textContent = 'Agregar Producto';
-            document.getElementById('save-product-btn').textContent = 'Guardar Producto';
-            clearProductForm();
-            document.getElementById('product-modal').style.display = 'block';
-        }
-
-        function showEditProductModal(productId) {
-            editingProductId = productId;
-            const product = productDB.getProductById(productId);
-            if (product) {
-                document.getElementById('product-modal-title').textContent = 'Editar Producto';
-                document.getElementById('save-product-btn').textContent = 'Actualizar Producto';
-                fillProductForm(product);
-                document.getElementById('product-modal').style.display = 'block';
-            }
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').style.display = 'none';
-            clearProductForm();
-            editingProductId = null;
-            document.getElementById('product-message').innerHTML = '';
-        }
-
-        function clearProductForm() {
-            document.getElementById('product-code').value = '';
-            document.getElementById('product-name').value = '';
-            document.getElementById('product-price').value = '';
-            document.getElementById('product-price-wholesale').value = '';
-            document.getElementById('product-description').value = '';
-            document.getElementById('product-image-url').value = '';
-            document.getElementById('product-stock').value = 'true';
-        }
-
-        function fillProductForm(product) {
-            document.getElementById('product-code').value = product.code;
-            document.getElementById('product-name').value = product.name;
-            document.getElementById('product-price').value = product.retailPrice;
-            document.getElementById('product-price-wholesale').value = product.wholesalePrice;
-            document.getElementById('product-description').value = product.description;
-            document.getElementById('product-image-url').value = product.imageUrl || '';
-            document.getElementById('product-stock').value = product.inStock.toString();
-        }
-
-        function saveProduct(event) {
-            event.preventDefault();
-            const messageDiv = document.getElementById('product-message');
-
-            const productData = {
-                code: document.getElementById('product-code').value,
-                name: document.getElementById('product-name').value,
-                retailPrice: parseFloat(document.getElementById('product-price').value),
-                wholesalePrice: parseFloat(document.getElementById('product-price-wholesale').value),
-                description: document.getElementById('product-description').value,
-                imageUrl: document.getElementById('product-image-url').value,
-                inStock: document.getElementById('product-stock').value === 'true'
-            };
-
-            try {
-                if (editingProductId) {
-                    productDB.updateProduct(editingProductId, productData);
-                    messageDiv.innerHTML = '<div class="success-message">Producto actualizado exitosamente</div>';
-                } else {
-                    productDB.addProduct(productData);
-                    messageDiv.innerHTML = '<div class="success-message">Producto agregado exitosamente</div>';
-                }
-                
-                setTimeout(() => {
-                    closeProductModal();
-                    loadProducts();
-                }, 1500);
-            } catch (error) {
-                messageDiv.innerHTML = '<div class="error-message">Error al guardar el producto</div>';
-            }
-        }
-
-       function deleteProduct(productId) {
-    if (!isAdminLoggedIn) {
-        alert('Debes iniciar sesión como administrador para eliminar productos');
-        return;
-    }
-    
-    if (confirm('¿Estás seguro de que quieres eliminar este producto permanentemente?')) {
-        const success = productDB.deleteProduct(productId);
-        
-        if (success) {
-            // Mostrar mensaje de éxito
-            document.getElementById('admin-message').innerHTML = 
-                '<div class="success-message">Producto eliminado exitosamente</div>';
-            
-            // Recargar la lista de productos
-            loadProducts();
-            
-            // Ocultar el mensaje después de 3 segundos
-            setTimeout(() => {
-                document.getElementById('admin-message').innerHTML = '';
-            }, 3000);
-        } else {
-            document.getElementById('admin-message').innerHTML = 
-                '<div class="error-message">Error al eliminar el producto</div>';
-        }
-    }
-}
-        function toggleProductStock(productId) {
-            console.log('=== TOGGLE STOCK ===');
-            console.log('Product ID:', productId);
-            
-            const product = productDB.getProductById(productId);
-            console.log('Producto encontrado:', product);
-            
-            if (product) {
-                product.inStock = !product.inStock;
-                const success = productDB.updateProduct(productId, product);
-                console.log('Stock actualizado:', success);
-                
-                if (success) {
-                    loadProducts();
-                    const status = product.inStock ? 'disponible' : 'agotado';
-                    document.getElementById('admin-message').innerHTML = `<div class="success-message">Producto marcado como ${status}</div>`;
-                    setTimeout(() => {
-                        document.getElementById('admin-message').innerHTML = '';
-                    }, 3000);
-                }
-            }
-        }
-
-        // Funciones de productos
-        function loadProducts() {
-            console.log('=== CARGANDO PRODUCTOS ===');
-            const products = productDB.getProducts();
-            console.log('Productos obtenidos:', products);
-            
-            const productGrid = document.getElementById('product-grid');
-            
-            if (products.length === 0) {
-                productGrid.innerHTML = '<div style="text-align: center; grid-column: 1 / -1; padding: 2rem; color: #666;"><i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i><p>No hay productos disponibles</p></div>';
-                return;
-            }
-
-            productGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-            console.log('Productos cargados en la interfaz');
-        }
-
-        function createProductCard(product) {
-            const currentPrice = currentPriceType === 'retail' ? product.retailPrice : product.wholesalePrice;
-            const isOutOfStock = !product.inStock;
-            const outOfStockClass = isOutOfStock ? 'out-of-stock' : '';
-            const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Pedido';
-            const buttonDisabled = isOutOfStock ? 'disabled' : '';
-
-            let imageContent = '<i class="fas fa-box"></i>';
-            if (product.imageUrl) {
-                imageContent = `<img src="${product.imageUrl}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-box\\"></i>'">`;
-            }
-
-            const adminControls = isAdminLoggedIn ? `
-        <div class="admin-controls show">
-            <button class="edit-btn" onclick="showEditProductModal(${product.id})">
-                <i class="fas fa-edit"></i> Editar
-            </button>
-            <button class="stock-btn ${isOutOfStock ? 'out-of-stock' : ''}" 
-                    onclick="toggleProductStock(${product.id})">
-                ${isOutOfStock ? 'Agotado' : 'En Stock'}
-            </button>
-            <button class="delete-btn" onclick="deleteProduct(${product.id})">
-                <i class="fas fa-trash"></i> Eliminar
-            </button>
-        </div>
-    ` : '';
-
-            return `
-                <div class="product-card ${outOfStockClass}" data-id="${product.id}">
-                    <div class="product-image">${imageContent}</div>
-                    <div class="product-info">
-                        <div class="product-code">Código: ${product.code}</div>
-                        <h3>${product.name}</h3>
-                        <div class="product-price" data-retail="${product.retailPrice}" data-wholesale="${product.wholesalePrice}">${currentPrice.toFixed(2)}</div>
-                        <div class="product-description">${product.description} IVA incluido.</div>
-                        <button class="product-button" onclick="addToCart(${product.id})" ${buttonDisabled}>${buttonText}</button>
-                        ${adminControls}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Funciones del carrito
-        function toggleCart() {
-            const cartElement = document.getElementById('shopping-cart');
-            cartElement.classList.toggle('active');
-            
-            // Si se está abriendo el carrito, asegurarse de que esté actualizado
-            if (cartElement.classList.contains('active')) {
-                updateCartDisplay();
-                console.log('Carrito abierto, contenido actual:', cart);
-            }
-        }
-            function updateQuantity(index, newQuantity) {
-    newQuantity = parseInt(newQuantity);
-    if (isNaN(newQuantity) || newQuantity < 1) return;
-
-    const item = cart[index];
-    item.quantity = newQuantity;
-    
-    // Actualizar precio según cantidad actual
-    const product = productDB.getProductById(item.productId);
-    if (product) {
-        const priceInfo = getApplicablePrice(product, newQuantity);
-        item.price = priceInfo.price;
-        item.priceType = priceInfo.type;
-        item.priceTypeText = priceInfo.typeText;
-    }
-
-    updateCartDisplay();
-}    
-
-function addToCart(productId) {
-    const product = productDB.getProductById(productId);
-    if (!product || !product.inStock) return;
-
-    const minQuantity = product.retailPrice < 1 ? 6 : 3;
-    const initialQuantity = currentPriceType === 'wholesale' ? minQuantity : 1;
-
-    const existingItemIndex = cart.findIndex(item => item.productId === productId);
-
-    if (existingItemIndex !== -1) {
-        cart[existingItemIndex].quantity += initialQuantity;
-    } else {
-        const priceInfo = getApplicablePrice(product, initialQuantity);
-        
-        const item = {
-            productId: productId,
-            code: product.code,
-            name: product.name,
-            retailPrice: product.retailPrice,
-            wholesalePrice: product.wholesalePrice,
-            quantity: initialQuantity,
-            price: priceInfo.price,
-            priceType: priceInfo.type,
-            priceTypeText: priceInfo.typeText,
-            minWholesale: minQuantity
-        };
-        cart.push(item);
-    }
-
-    updateCartDisplay();
-    showNotification(`${product.name} agregado (${initialQuantity} unidad${initialQuantity > 1 ? 'es' : ''})`);
-}
-
-        function updateCartDisplay() {
-    const cartContent = document.getElementById('cart-content');
-    const cartFooter = document.getElementById('cart-footer');
-    const cartCounter = document.getElementById('cart-counter');
-    const cartTotal = document.getElementById('cart-total');
-    
-    // Calcular cantidad total de productos
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartCounter.textContent = totalItems;
-    
-    if (cart.length === 0) {
-        cartContent.innerHTML = '<p style="text-align: center; color: #666; margin: 2rem 0;">No hay productos en el pedido</p>';
-        cartFooter.style.display = 'none';
-        return;
-    }
-    
-    cartFooter.style.display = 'block';
-    
-    let total = 0;
-    cartContent.innerHTML = cart.map((item, index) => {
-        const product = productDB.getProductById(item.productId);
-        total += item.price * item.quantity;
-        
-        return `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <div class="cart-item-code">${item.code}</div>
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">
-                        $${item.price.toFixed(2)} c/u (${item.priceTypeText})
-                        ${item.priceType === 'wholesale' ? 
-                          '<span class="wholesale-badge">MAYOR</span>' : 
-                          '<span class="retail-badge">MENOR</span>'}
-                    </div>
-                    <div class="wholesale-info">
-                        ${item.priceType === 'retail' && item.minWholesale ? 
-                          `*Compra ${item.minWholesale} unidades para precio al por mayor` : ''}
-                    </div>
-                </div>
-                <div class="cart-item-quantity">
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
-                    <input type="number" class="quantity-input" value="${item.quantity}" 
-                           min="1" onchange="updateQuantity(${index}, this.value)">
-                    <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
-                </div>
-                <div class="cart-item-actions">
-                    <button class="remove-item" onclick="removeFromCart(${index})">×</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    cartTotal.textContent = `Total: $${total.toFixed(2)}`;
-}
-
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartDisplay();
-        }
-
-        function clearCart() {
-            if (confirm('¿Estás seguro de que quieres limpiar todo el pedido?')) {
-                cart = [];
-                updateCartDisplay();
-            }
-        }
-
-        function sendOrder() {
-            if (cart.length === 0) {
-                alert('Tu pedido está vacío');
-                return;
-            }
-            
-            let message = '🛒 *NUEVO PEDIDO - MUNDIOFERTAS* 🛒\n\n';
-            message += '📍 *Dirección:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n\n';
-            message += '*PRODUCTOS SOLICITADOS:*\n';
-            
-            let total = 0;
-            cart.forEach((item, index) => {
-                total += item.price;
-                message += `${index + 1}. *Código:* ${item.code}\n`;
-                message += `   *Producto:* ${item.name}\n`;
-                message += `   *Precio:* ${item.price.toFixed(2)} (${item.priceTypeText})\n\n`;
-            });
-            
-            message += `💰 *TOTAL: ${total.toFixed(2)}*\n\n`;
-            message += '📋 Por favor confirmen disponibilidad y método de pago.\n';
-            message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
-            
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
-            
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Función para alternar tipo de precio
-        function togglePriceType(type) {
-            currentPriceType = type;
-            
-            // Actualizar botones
-            document.getElementById('retail-btn').classList.toggle('active', type === 'retail');
-            document.getElementById('wholesale-btn').classList.toggle('active', type === 'wholesale');
-            
-            // Recargar productos para mostrar nuevos precios
-            loadProducts();
-        }
-
-        // Navegación suave
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Cerrar modales al hacer clic fuera
-        window.onclick = function(event) {
-            const adminModal = document.getElementById('admin-login-modal');
-            const productModal = document.getElementById('product-modal');
-            
-            if (event.target === adminModal) {
-                closeAdminLogin();
-            }
-            if (event.target === productModal) {
-                closeProductModal();
-            }
-        }
-
-        // Inicializar la aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar productos con datos de ejemplo mejorados para testing
-            if (!localStorage.getItem('mundiOfertas_products')) {
                 const sampleProducts = [
                     {
                         id: 1,
                         code: 'MO-001',
                         name: 'Lámpara LED',
-                        retailPrice: 0.75, // Menos de $1 para probar regla de 6 unidades
+                        retailPrice: 0.75,
                         wholesalePrice: 0.60,
                         description: 'Lámpara LED de alta eficiencia energética.',
                         imageUrl: '',
-                        inStock: true
+                        inStock: true,
+                        category: 1 // Electrónica
                     },
                     {
                         id: 2,
                         code: 'MO-002',
                         name: 'Microondas Digital',
-                        retailPrice: 3.00, // Más de $1 para probar regla de 3 unidades
+                        retailPrice: 3.00,
                         wholesalePrice: 2.50,
                         description: 'Microondas con panel digital y múltiples funciones.',
                         imageUrl: '',
-                        inStock: true
+                        inStock: true,
+                        category: 2 // Hogar
                     },
                     {
                         id: 3,
@@ -1835,51 +1308,730 @@ function addToCart(productId) {
                         wholesalePrice: 1.00,
                         description: 'Cafetera automática con temporizador programable.',
                         imageUrl: '',
-                        inStock: true
+                        inStock: true,
+                        category: 2 // Hogar
+                    },
+                    {
+                        id: 4,
+                        code: 'MO-004',
+                        name: 'Set de LEGO',
+                        retailPrice: 25.00,
+                        wholesalePrice: 20.00,
+                        description: 'Set de bloques de construcción para niños.',
+                        imageUrl: '',
+                        inStock: true,
+                        category: 3 // Juguetes
+                    },
+                    {
+                        id: 5,
+                        code: 'MO-005',
+                        name: 'Auriculares Bluetooth',
+                        retailPrice: 1.50,
+                        wholesalePrice: 1.20,
+                        description: 'Auriculares inalámbricos con excelente calidad de sonido.',
+                        imageUrl: '',
+                        inStock: true,
+                        category: 1 // Electrónica
                     }
                 ];
-                productDB.saveProducts(sampleProducts);
+                this.saveProducts(sampleProducts);
+            }
+        }
+
+        // Métodos para Productos
+        getProducts() {
+            const products = localStorage.getItem(this.productsKey);
+            return products ? JSON.parse(products) : [];
+        }
+
+        saveProducts(products) {
+            localStorage.setItem(this.productsKey, JSON.stringify(products));
+        }
+
+        addProduct(product) {
+            const products = this.getProducts();
+            const newId = Math.max(...products.map(p => p.id), 0) + 1;
+            product.id = newId;
+            products.push(product);
+            this.saveProducts(products);
+            return product;
+        }
+
+        updateProduct(id, updatedProduct) {
+            const products = this.getProducts();
+            const index = products.findIndex(p => p.id === id);
+            if (index !== -1) {
+                products[index] = { ...updatedProduct, id };
+                this.saveProducts(products);
+                return products[index];
+            }
+            return null;
+        }
+
+        deleteProduct(id) {
+            const products = this.getProducts();
+            const filteredProducts = products.filter(p => p.id !== id);
+            this.saveProducts(filteredProducts);
+            return filteredProducts.length !== products.length;
+        }
+
+        getProductById(id) {
+            const products = this.getProducts();
+            return products.find(p => p.id === id);
+        }
+
+        // Nuevos Métodos para Categorías
+        getCategories() {
+            const categories = localStorage.getItem(this.categoriesKey);
+            return categories ? JSON.parse(categories) : [];
+        }
+
+        saveCategories(categories) {
+            localStorage.setItem(this.categoriesKey, JSON.stringify(categories));
+        }
+
+        addCategory(category) {
+            const categories = this.getCategories();
+            const newId = Math.max(...categories.map(c => c.id), 0) + 1;
+            category.id = newId;
+            categories.push(category);
+            this.saveCategories(categories);
+            return category;
+        }
+
+        updateCategory(id, updatedCategory) {
+            const categories = this.getCategories();
+            const index = categories.findIndex(c => c.id === id);
+            if (index !== -1) {
+                categories[index] = { ...updatedCategory, id };
+                this.saveCategories(categories);
+                return categories[index];
+            }
+            return null;
+        }
+
+        deleteCategory(id) {
+            const categories = this.getCategories();
+            const filteredCategories = categories.filter(c => c.id !== id);
+            this.saveCategories(filteredCategories);
+            return filteredCategories.length !== categories.length;
+        }
+    }
+
+    const appDB = new AppDatabase();
+
+    // Funciones existentes (sin cambios)
+    function getMinWholesaleQuantity(retailPrice) {
+        return retailPrice < 1 ? 6 : 3;
+    }
+
+    function getApplicablePrice(product, quantity) {
+        const minWholesale = product.retailPrice < 1 ? 6 : 3;
+        const isWholesale = quantity >= minWholesale;
+
+        return {
+            price: isWholesale ? product.wholesalePrice : product.retailPrice,
+            type: isWholesale ? 'wholesale' : 'retail',
+            typeText: isWholesale ? 'Mayor' : 'Menor',
+            minQuantity: minWholesale
+        };
+    }
+
+    // Funciones de autenticación
+    function showAdminLogin() {
+        if (isAdminLoggedIn) {
+            adminLogout();
+        } else {
+            document.getElementById('admin-login-modal').style.display = 'block';
+        }
+    }
+
+    function closeAdminLogin() {
+        document.getElementById('admin-login-modal').style.display = 'none';
+        document.getElementById('admin-password').value = '';
+        document.getElementById('login-message').innerHTML = '';
+    }
+
+    function adminLogin(event) {
+        event.preventDefault();
+        const password = document.getElementById('admin-password').value;
+        const messageDiv = document.getElementById('login-message');
+
+        if (password === ADMIN_PASSWORD) {
+            isAdminLoggedIn = true;
+            closeAdminLogin();
+            showAdminControls();
+            messageDiv.innerHTML = '<div class="success-message">Acceso concedido</div>';
+            document.getElementById('admin-btn').innerHTML = '<i class="fas fa-sign-out-alt"></i> Salir';
+        } else {
+            messageDiv.innerHTML = '<div class="error-message">Contraseña incorrecta</div>';
+        }
+    }
+
+    function adminLogout() {
+        isAdminLoggedIn = false;
+        hideAdminControls();
+        document.getElementById('admin-btn').innerHTML = '<i class="fas fa-user-cog"></i> Admin';
+    }
+
+    function showAdminControls() {
+        document.getElementById('admin-panel').classList.add('show');
+        document.querySelectorAll('.admin-controls').forEach(control => {
+            control.classList.add('show');
+        });
+        loadAdminCategories(); // Cargar categorías en el panel de admin
+    }
+
+    function hideAdminControls() {
+        document.getElementById('admin-panel').classList.remove('show');
+        document.querySelectorAll('.admin-controls').forEach(control => {
+            control.classList.remove('show');
+        });
+    }
+
+    // Funciones del modal de productos
+    function showAddProductModal() {
+        editingProductId = null;
+        document.getElementById('product-modal-title').textContent = 'Agregar Producto';
+        document.getElementById('save-product-btn').textContent = 'Guardar Producto';
+        clearProductForm();
+        loadCategoryDropdown(); // Cargar el dropdown de categorías
+        document.getElementById('product-modal').style.display = 'block';
+    }
+
+    function showEditProductModal(productId) {
+        editingProductId = productId;
+        const product = appDB.getProductById(productId);
+        if (product) {
+            document.getElementById('product-modal-title').textContent = 'Editar Producto';
+            document.getElementById('save-product-btn').textContent = 'Actualizar Producto';
+            fillProductForm(product);
+            loadCategoryDropdown(product.category); // Cargar y seleccionar la categoría
+            document.getElementById('product-modal').style.display = 'block';
+        }
+    }
+
+    function closeProductModal() {
+        document.getElementById('product-modal').style.display = 'none';
+        clearProductForm();
+        editingProductId = null;
+        document.getElementById('product-message').innerHTML = '';
+    }
+
+    function clearProductForm() {
+        document.getElementById('product-code').value = '';
+        document.getElementById('product-name').value = '';
+        document.getElementById('product-price').value = '';
+        document.getElementById('product-price-wholesale').value = '';
+        document.getElementById('product-description').value = '';
+        document.getElementById('product-image-url').value = '';
+        document.getElementById('product-stock').value = 'true';
+        document.getElementById('product-category').value = '';
+    }
+
+    function fillProductForm(product) {
+        document.getElementById('product-code').value = product.code;
+        document.getElementById('product-name').value = product.name;
+        document.getElementById('product-price').value = product.retailPrice;
+        document.getElementById('product-price-wholesale').value = product.wholesalePrice;
+        document.getElementById('product-description').value = product.description;
+        document.getElementById('product-image-url').value = product.imageUrl || '';
+        document.getElementById('product-stock').value = product.inStock.toString();
+        document.getElementById('product-category').value = product.category;
+    }
+
+    function saveProduct(event) {
+        event.preventDefault();
+        const messageDiv = document.getElementById('product-message');
+
+        const productData = {
+            code: document.getElementById('product-code').value,
+            name: document.getElementById('product-name').value,
+            retailPrice: parseFloat(document.getElementById('product-price').value),
+            wholesalePrice: parseFloat(document.getElementById('product-price-wholesale').value),
+            description: document.getElementById('product-description').value,
+            imageUrl: document.getElementById('product-image-url').value,
+            inStock: document.getElementById('product-stock').value === 'true',
+            category: parseInt(document.getElementById('product-category').value)
+        };
+
+        try {
+            if (editingProductId) {
+                appDB.updateProduct(editingProductId, productData);
+                messageDiv.innerHTML = '<div class="success-message">Producto actualizado exitosamente</div>';
+            } else {
+                appDB.addProduct(productData);
+                messageDiv.innerHTML = '<div class="success-message">Producto agregado exitosamente</div>';
             }
             
-            loadProducts();
-            
-            // Debug para verificar funcionamiento
-            console.log('MundiOfertas - Sistema iniciado');
-            console.log('Reglas: <$1.00 = mín 6 unidades, ≥$1.00 = mín 3 unidades');
-            
-            // Verificar que el carrito esté inicializado
-            updateCartDisplay();
-        });
-
-function updateCartItemPrice(index) {
-    const item = cart[index];
-    const product = productDB.getProductById(item.productId);
-    
-    if (product) {
-        const priceInfo = getApplicablePrice(product, item.quantity);
-        item.price = priceInfo.price;
-        item.priceType = priceInfo.type;
-        item.priceTypeText = priceInfo.typeText;
+            setTimeout(() => {
+                closeProductModal();
+                loadProducts();
+            }, 1500);
+        } catch (error) {
+            messageDiv.innerHTML = '<div class="error-message">Error al guardar el producto</div>';
+        }
     }
-}
 
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.innerHTML = message;
-    document.body.appendChild(notification);
+    function deleteProduct(productId) {
+        if (!isAdminLoggedIn) {
+            alert('Debes iniciar sesión como administrador para eliminar productos');
+            return;
+        }
+        
+        if (confirm('¿Estás seguro de que quieres eliminar este producto permanentemente?')) {
+            const success = appDB.deleteProduct(productId);
+            
+            if (success) {
+                document.getElementById('admin-message').innerHTML =
+                    '<div class="success-message">Producto eliminado exitosamente</div>';
+                
+                loadProducts();
+                
+                setTimeout(() => {
+                    document.getElementById('admin-message').innerHTML = '';
+                }, 3000);
+            } else {
+                document.getElementById('admin-message').innerHTML =
+                    '<div class="error-message">Error al eliminar el producto</div>';
+            }
+        }
+    }
+
+    function toggleProductStock(productId) {
+        const product = appDB.getProductById(productId);
+        if (product) {
+            product.inStock = !product.inStock;
+            const success = appDB.updateProduct(productId, product);
+            
+            if (success) {
+                loadProducts();
+                const status = product.inStock ? 'disponible' : 'agotado';
+                document.getElementById('admin-message').innerHTML = `<div class="success-message">Producto marcado como ${status}</div>`;
+                setTimeout(() => {
+                    document.getElementById('admin-message').innerHTML = '';
+                }, 3000);
+            }
+        }
+    }
+
+    // Funciones de productos
+    function loadProducts() {
+        const products = appDB.getProducts();
+        const productGrid = document.getElementById('product-grid');
+        
+        // Filtra los productos según la categoría actual
+        const filteredProducts = currentCategory === 'all'
+            ? products
+            : products.filter(p => p.category === parseInt(currentCategory));
+
+        if (filteredProducts.length === 0) {
+            productGrid.innerHTML = '<div style="text-align: center; grid-column: 1 / -1; padding: 2rem; color: #666;"><i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i><p>No hay productos en esta categoría.</p></div>';
+            return;
+        }
+
+        productGrid.innerHTML = filteredProducts.map(product => createProductCard(product)).join('');
+    }
+
+    function createProductCard(product) {
+        const currentPrice = currentPriceType === 'retail' ? product.retailPrice : product.wholesalePrice;
+        const isOutOfStock = !product.inStock;
+        const outOfStockClass = isOutOfStock ? 'out-of-stock' : '';
+        const buttonText = isOutOfStock ? 'Agotado' : 'Agregar al Pedido';
+        const buttonDisabled = isOutOfStock ? 'disabled' : '';
+
+        let imageContent = '<i class="fas fa-box"></i>';
+        if (product.imageUrl) {
+            imageContent = `<img src="${product.imageUrl}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\"fas fa-box\\"></i>'">`;
+        }
+        
+        const categoryName = appDB.getCategories().find(c => c.id === product.category)?.name || 'Sin Categoría';
+
+        const adminControls = isAdminLoggedIn ? `
+        <div class="admin-controls show">
+            <button class="edit-btn" onclick="showEditProductModal(${product.id})">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="stock-btn ${isOutOfStock ? 'out-of-stock' : ''}"
+                    onclick="toggleProductStock(${product.id})">
+                ${isOutOfStock ? 'Agotado' : 'En Stock'}
+            </button>
+            <button class="delete-btn" onclick="deleteProduct(${product.id})">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
+        </div>
+        ` : '';
+
+        return `
+            <div class="product-card ${outOfStockClass}" data-id="${product.id}">
+                <div class="product-image">${imageContent}</div>
+                <div class="product-info">
+                    <div class="product-code">Código: ${product.code}</div>
+                    <div class="product-category-name" style="font-size: 0.9em; color: #555; font-weight: bold; margin-bottom: 5px;">${categoryName}</div>
+                    <h3>${product.name}</h3>
+                    <div class="product-price" data-retail="${product.retailPrice}" data-wholesale="${product.wholesalePrice}">$${currentPrice.toFixed(2)}</div>
+                    <div class="product-description">${product.description} IVA incluido.</div>
+                    <button class="product-button" onclick="addToCart(${product.id})" ${buttonDisabled}>${buttonText}</button>
+                    ${adminControls}
+                </div>
+            </div>
+        `;
+    }
+
+    // Funciones del carrito (sin cambios)
+    function toggleCart() {
+        const cartElement = document.getElementById('shopping-cart');
+        cartElement.classList.toggle('active');
+        
+        if (cartElement.classList.contains('active')) {
+            updateCartDisplay();
+        }
+    }
     
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
+    function updateQuantity(index, newQuantity) {
+        newQuantity = parseInt(newQuantity);
+        if (isNaN(newQuantity) || newQuantity < 1) return;
+
+        const item = cart[index];
+        item.quantity = newQuantity;
+        
+        const product = appDB.getProductById(item.productId);
+        if (product) {
+            const priceInfo = getApplicablePrice(product, newQuantity);
+            item.price = priceInfo.price;
+            item.priceType = priceInfo.type;
+            item.priceTypeText = priceInfo.typeText;
+        }
+        updateCartDisplay();
+    }
+
+    function addToCart(productId) {
+        const product = appDB.getProductById(productId);
+        if (!product || !product.inStock) return;
+
+        const minQuantity = product.retailPrice < 1 ? 6 : 3;
+        const initialQuantity = currentPriceType === 'wholesale' ? minQuantity : 1;
+
+        const existingItemIndex = cart.findIndex(item => item.productId === productId);
+
+        if (existingItemIndex !== -1) {
+            cart[existingItemIndex].quantity += initialQuantity;
+        } else {
+            const priceInfo = getApplicablePrice(product, initialQuantity);
+            
+            const item = {
+                productId: productId,
+                code: product.code,
+                name: product.name,
+                retailPrice: product.retailPrice,
+                wholesalePrice: product.wholesalePrice,
+                quantity: initialQuantity,
+                price: priceInfo.price,
+                priceType: priceInfo.type,
+                priceTypeText: priceInfo.typeText,
+                minWholesale: minQuantity
+            };
+            cart.push(item);
+        }
+
+        updateCartDisplay();
+        showNotification(`${product.name} agregado (${initialQuantity} unidad${initialQuantity > 1 ? 'es' : ''})`);
+    }
+
+    function updateCartDisplay() {
+        const cartContent = document.getElementById('cart-content');
+        const cartFooter = document.getElementById('cart-footer');
+        const cartCounter = document.getElementById('cart-counter');
+        const cartTotal = document.getElementById('cart-total');
+        
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCounter.textContent = totalItems;
+        
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p style="text-align: center; color: #666; margin: 2rem 0;">No hay productos en el pedido</p>';
+            cartFooter.style.display = 'none';
+            return;
+        }
+        
+        cartFooter.style.display = 'block';
+        
+        let total = 0;
+        cartContent.innerHTML = cart.map((item, index) => {
+            const product = appDB.getProductById(item.productId);
+            if(product) {
+                const priceInfo = getApplicablePrice(product, item.quantity);
+                item.price = priceInfo.price;
+                item.priceType = priceInfo.type;
+                item.priceTypeText = priceInfo.typeText;
+            }
+            total += item.price * item.quantity; // Sumar correctamente
+            
+            return `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-code">${item.code}</div>
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">
+                            $${item.price.toFixed(2)} c/u (${item.priceTypeText})
+                            ${item.priceType === 'wholesale' ?
+                                '<span class="wholesale-badge">MAYOR</span>' :
+                                '<span class="retail-badge">MENOR</span>'}
+                        </div>
+                        <div class="wholesale-info">
+                            ${item.priceType === 'retail' && item.minWholesale ?
+                                `*Compra ${item.minWholesale} unidades para precio al por mayor` : ''}
+                        </div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity - 1})">-</button>
+                        <input type="number" class="quantity-input" value="${item.quantity}"
+                                min="1" onchange="updateQuantity(${index}, this.value)">
+                        <button class="quantity-btn" onclick="updateQuantity(${index}, ${item.quantity + 1})">+</button>
+                    </div>
+                    <div class="cart-item-actions">
+                        <button class="remove-item" onclick="removeFromCart(${index})">×</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartDisplay();
+    }
+
+    function clearCart() {
+        if (confirm('¿Estás seguro de que quieres limpiar todo el pedido?')) {
+            cart = [];
+            updateCartDisplay();
+        }
+    }
+
+    function sendOrder() {
+        if (cart.length === 0) {
+            alert('Tu pedido está vacío');
+            return;
+        }
+        
+        let message = '🛒 *NUEVO PEDIDO - MUNDIOFERTAS* 🛒\n\n';
+        message += '📍 *Dirección:* Cotopaxi N654 entre Olmedo y Mejía, Centro Histórico, Quito\n\n';
+        message += '*PRODUCTOS SOLICITADOS:*\n';
+        
+        let total = 0;
+        cart.forEach((item, index) => {
+            total += item.price * item.quantity; // Sumar correctamente
+            message += `${index + 1}. *Producto:* ${item.name} (Código: ${item.code})\n`;
+            message += `   *Cantidad:* ${item.quantity}\n`;
+            message += `   *Precio por unidad:* $${item.price.toFixed(2)} (${item.priceTypeText})\n\n`;
+        });
+        
+        message += `💰 *TOTAL: $${total.toFixed(2)}*\n\n`;
+        message += '📋 Por favor confirmen disponibilidad y método de pago.\n';
+        message += '🕐 *Horario de atención:* Lunes a Sábados 9:30 AM - 6:00 PM';
+        
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/593983738543?text=${encodedMessage}`;
+        
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Función para alternar tipo de precio
+    function togglePriceType(type) {
+        currentPriceType = type;
+        
+        document.getElementById('retail-btn').classList.toggle('active', type === 'retail');
+        document.getElementById('wholesale-btn').classList.toggle('active', type === 'wholesale');
+        
+        loadProducts();
+    }
     
-    setTimeout(() => {
-        notification.classList.remove('show');
+    // Funciones para categorías
+    function loadCategories() {
+        const categories = appDB.getCategories();
+        const categoriesContainer = document.getElementById('categories-container');
+        if (!categoriesContainer) return;
+
+        let categoriesHTML = `<button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="filterProducts('all')">Todos</button>`;
+        categoriesHTML += categories.map(cat => `
+            <button class="category-btn ${currentCategory === cat.id ? 'active' : ''}" onclick="filterProducts(${cat.id})">${cat.name}</button>
+        `).join('');
+        
+        categoriesContainer.innerHTML = categoriesHTML;
+    }
+    
+    function filterProducts(categoryId) {
+        currentCategory = categoryId;
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        // Encontrar el botón correcto y activarlo
+        const buttonToActivate = document.querySelector(`.category-btn[onclick="filterProducts('${categoryId}')"]`) || 
+                                 document.querySelector(`.category-btn[onclick="filterProducts(${categoryId})"]`);
+        if (buttonToActivate) {
+            buttonToActivate.classList.add('active');
+        }
+        loadProducts();
+    }
+    
+    // Funciones para el panel de administración de categorías
+    function loadAdminCategories() {
+        const categories = appDB.getCategories();
+        const adminCategoriesList = document.getElementById('admin-categories-list');
+        adminCategoriesList.innerHTML = categories.map(cat => `
+            <li class="admin-category-item">
+                <span>${cat.name}</span>
+                <div class="category-actions">
+                    <button class="edit-btn" onclick="showEditCategoryModal(${cat.id})"><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn" onclick="deleteCategory(${cat.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </li>
+        `).join('');
+    }
+
+    function showAddCategoryModal() {
+        const modal = document.getElementById('category-modal');
+        document.getElementById('category-modal-title').textContent = 'Agregar Categoría';
+        document.getElementById('category-name-input').value = '';
+        editingCategoryId = null;
+        modal.style.display = 'block';
+    }
+
+    function showEditCategoryModal(categoryId) {
+        const category = appDB.getCategories().find(c => c.id === categoryId);
+        if (category) {
+            const modal = document.getElementById('category-modal');
+            document.getElementById('category-modal-title').textContent = 'Editar Categoría';
+            document.getElementById('category-name-input').value = category.name;
+            editingCategoryId = categoryId;
+            modal.style.display = 'block';
+        }
+    }
+
+    function saveCategory(event) {
+        event.preventDefault();
+        const categoryName = document.getElementById('category-name-input').value.trim();
+        if (!categoryName) return;
+
+        if (editingCategoryId) {
+            appDB.updateCategory(editingCategoryId, { name: categoryName });
+            showNotification('Categoría actualizada.');
+        } else {
+            appDB.addCategory({ name: categoryName });
+            showNotification('Categoría agregada.');
+        }
+        
+        closeCategoryModal();
+        loadCategories();
+        loadAdminCategories();
+        loadCategoryDropdown();
+    }
+    
+    function deleteCategory(categoryId) {
+        if (!confirm('¿Estás seguro de que quieres eliminar esta categoría? Los productos de esta categoría quedarán sin ella.')) {
+            return;
+        }
+        
+        const products = appDB.getProducts();
+        products.forEach(p => {
+            if (p.category === categoryId) {
+                p.category = null; // O asignarle una categoría por defecto
+            }
+        });
+        appDB.saveProducts(products);
+        
+        appDB.deleteCategory(categoryId);
+        showNotification('Categoría eliminada.');
+        loadCategories();
+        loadAdminCategories();
+        loadProducts();
+    }
+
+    function closeCategoryModal() {
+        document.getElementById('category-modal').style.display = 'none';
+        document.getElementById('category-name-input').value = '';
+    }
+
+    function loadCategoryDropdown(selectedCategoryId = null) {
+        const categories = appDB.getCategories();
+        const dropdown = document.getElementById('product-category');
+        
+        // Limpiar opciones previas
+        dropdown.innerHTML = '<option value="">-- Selecciona una Categoría --</option>';
+
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = cat.name;
+            if (selectedCategoryId && cat.id === selectedCategoryId) {
+                option.selected = true;
+            }
+            dropdown.appendChild(option);
+        });
+    }
+
+
+    // Navegación suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Cerrar modales al hacer clic fuera
+    window.onclick = function(event) {
+        const adminModal = document.getElementById('admin-login-modal');
+        const productModal = document.getElementById('product-modal');
+        const categoryModal = document.getElementById('category-modal');
+        
+        if (event.target === adminModal) {
+            closeAdminLogin();
+        }
+        if (event.target === productModal) {
+            closeProductModal();
+        }
+        if (event.target === categoryModal) {
+            closeCategoryModal();
+        }
+    }
+
+    // Inicializar la aplicación
+    document.addEventListener('DOMContentLoaded', function() {
+        // La base de datos se inicializa con datos de ejemplo si no existen
+        // appDB = new AppDatabase();
+        
+        loadCategories();
+        loadProducts();
+        updateCartDisplay();
+    });
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.innerHTML = message;
+        document.body.appendChild(notification);
+        
         setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-    </script>
+            notification.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+</script>
+   
 </body>
 </html>
